@@ -39,7 +39,7 @@ class Grafo{
   
   }
   
-  public voidisplay(){
+  public void display(){
   
   
   }
