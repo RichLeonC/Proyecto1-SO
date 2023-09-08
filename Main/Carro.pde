@@ -9,7 +9,7 @@ class Carro{
   PVector pos;
   color c;
   
-  Carro(int x, int y,float vel, PVector direccion, float radio){
+  Carro(float x, float y,float vel, PVector direccion, float radio){
     this.velocidad = vel;
     this.acc = new PVector(0, velocidad);
     this.direccion = direccion;

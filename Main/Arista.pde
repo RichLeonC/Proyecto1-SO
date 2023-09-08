@@ -4,7 +4,7 @@ class Arista {
   PVector nodoDestino;
   color c;
   
-  Arista(float distancia, PVector origen, PVector destino, color c, float radio){
+  Arista(float distancia, PVector origen, PVector destino, color c){
     this.distancia = distancia;
     this.nodoOrigen = origen;
     this.nodoDestino = destino;

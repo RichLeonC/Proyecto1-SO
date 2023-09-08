@@ -6,17 +6,18 @@ class Nodo {
   private boolean ocupado;
   private ArrayList<Carro> carrosEspera;
   
-  Nodo(float radio, PVector pos, float alpha, boolean ocupado){
+  Nodo(float radio, PVector pos, float alpha){
       this.radio = radio;
       this.alpha = alpha;
       this.pos = pos;
-      this.ocupado =ocupado;
+      this.ocupado =false;
       this.carrosEspera = new ArrayList();
   
   }
 
-  public Carro generarCarro(){
-      return Carro;
+  public void generarCarro(){
+    
+      return ;
     
   }
   
