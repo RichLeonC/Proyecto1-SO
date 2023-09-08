@@ -79,10 +79,7 @@ void draw() {
 
 
   //if (cp5.getController("saveButton").isMousePressed()) {
-  //  // Obtener el texto ingresado en el campo de texto
   //  inputData = cp5.get(Textfield.class, "inputField").getText();
-  //  // Aquí puedes procesar o guardar los datos como desees
-  //  println("Datos ingresados: " + inputData);
   //}
 }
 
@@ -90,7 +87,7 @@ void drawGrafoCanvas() {
   grafoCanvas.beginDraw();
   grafoCanvas.background(#001f3f);
 
-  // LOS DIBUJOS DE LOS NODOS,ARISTAS Y  IRAN ACA
+  // LOS DIBUJOS DE LOS NODOS,ARISTAS, CARROS IRAN ACA
 
   grafoCanvas.endDraw();
 }
