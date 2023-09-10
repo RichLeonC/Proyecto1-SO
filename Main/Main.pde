@@ -3,11 +3,15 @@ import controlP5.*;
 Arista arista;
 Carro carro;
 ControlP5 cp5;
-String inputData = "";
-Button saveButton;
+
 PGraphics configCanvas;
 PGraphics grafoCanvas;
 PFont font;
+
+Textfield nodesField;
+Textfield[][] cells;
+Textlabel[] rowLabels;    // Etiquetas de fila
+Textlabel[] colLabels;    // Etiquetas de columna
 
 void setup() {
   size(1280, 720);
@@ -32,7 +36,7 @@ void setup() {
 }
 
 void panelConfigUI() {
-  Textfield nodesField = cp5.addTextfield("NODOS")
+  nodesField = cp5.addTextfield("NODOS")
     .setPosition(20, 20)
     .setSize(75, 30)
     .setAutoClear(true);
@@ -49,17 +53,73 @@ void panelConfigUI() {
     .setPosition(150, 20)
     .setSize(30, 30)
     .setCaptionLabel("-");
-    
-    btnIncrement.getCaptionLabel().setSize(14);
-    btnDecrement.getCaptionLabel().setSize(14);
-    
+
+  btnIncrement.getCaptionLabel().setSize(14);
+  btnDecrement.getCaptionLabel().setSize(14);
+
   Button btnCreateTable = cp5.addButton("createTable")
-  .setPosition(200,20)
-  .setSize(90,30)
-  .setCaptionLabel("Crear tabla");
-  
+    .setPosition(200, 20)
+    .setSize(90, 30)
+    .setCaptionLabel("Crear tabla");
+
   btnCreateTable.getCaptionLabel().setSize(14);
 }
+
+
+
+void controlEvent(ControlEvent event) {
+  if (event.isController()) {
+    if (event.getName().equals("createTable")) {
+      try {
+        String nodes = nodesField.getText();
+        int numNodes = Integer.parseInt(nodes);
+        createTable(numNodes, numNodes);
+      }
+      catch(Error error) {
+        print("Error en textfield nodos");
+      }
+    }
+  }
+}
+
+void createTable(int rows, int cols) {
+  int cellWidth = 50;
+  int cellHeight = 40;
+
+  if (rows>9) {
+    cellWidth = 40;
+  }
+
+  cells = new Textfield[rows][cols];
+  rowLabels = new Textlabel[rows];
+  colLabels = new Textlabel[cols];
+  int x = 40;
+  int y = 120;
+
+
+  for (int i = 0; i < rows; i++) {
+    rowLabels[i] = cp5.addTextlabel("FilaLabel_"+i)
+      .setText(""+i)
+      .setPosition(10, y + i * cellHeight+10)
+      .setColorValue(color(255))
+      .setFont(font);
+
+    for (int j = 0; j<cols; j++) {
+      colLabels[j] = cp5.addTextlabel("ColLabel_" + j)
+        .setText("" + j)
+        .setPosition(x + j * cellWidth, 90)
+        .setColorValue(color(255))
+        .setFont(font);
+
+      cells[i][j] = cp5.addTextfield("" + i + "_" + j)
+        .setPosition(x + j * cellWidth, y + i * cellHeight)
+        .setSize(cellWidth, cellHeight)
+        .setFont(font)
+        .setAutoClear(true);
+    }
+  }
+}
+
 
 void draw() {
   background(255);
@@ -77,10 +137,6 @@ void draw() {
   image(grafoCanvas, width/2.5, 0);
 
 
-
-  //if (cp5.getController("saveButton").isMousePressed()) {
-  //  inputData = cp5.get(Textfield.class, "inputField").getText();
-  //}
 }
 
 void drawGrafoCanvas() {
