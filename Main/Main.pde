@@ -10,8 +10,8 @@ PFont font;
 
 Textfield nodesField;
 Textfield[][] cells;
-Textlabel[] rowLabels;    // Etiquetas de fila
-Textlabel[] colLabels;    // Etiquetas de columna
+Textlabel[] rowLabels;
+Textlabel[] colLabels;
 
 void setup() {
   size(1280, 720);
@@ -85,6 +85,7 @@ void controlEvent(ControlEvent event) {
 void createTable(int rows, int cols) {
   int cellWidth = 50;
   int cellHeight = 40;
+  int labelCount = 0;
 
   if (rows>9) {
     cellWidth = 40;
@@ -105,17 +106,20 @@ void createTable(int rows, int cols) {
       .setFont(font);
 
     for (int j = 0; j<cols; j++) {
-      colLabels[j] = cp5.addTextlabel("ColLabel_" + j)
-        .setText("" + j)
-        .setPosition(x + j * cellWidth, 90)
-        .setColorValue(color(255))
-        .setFont(font);
-
-      cells[i][j] = cp5.addTextfield("" + i + "_" + j)
+      if (labelCount<cols) {
+        colLabels[j] = cp5.addTextlabel("ColLabel_" + j)
+          .setText("" + j)
+          .setPosition(x + j * cellWidth, 90)
+          .setColorValue(color(255))
+          .setFont(font);
+          labelCount++;
+      }
+      cells[i][j] = cp5.addTextfield(""+i+"."+j)
         .setPosition(x + j * cellWidth, y + i * cellHeight)
         .setSize(cellWidth, cellHeight)
         .setFont(font)
-        .setAutoClear(true);
+        .setAutoClear(true)
+        .setCaptionLabel("");
     }
   }
 }
@@ -135,8 +139,6 @@ void draw() {
   image(configCanvas, 0, 0);
   drawGrafoCanvas();
   image(grafoCanvas, width/2.5, 0);
-
-
 }
 
 void drawGrafoCanvas() {
