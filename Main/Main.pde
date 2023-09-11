@@ -1,5 +1,15 @@
 import controlP5.*;
 
+//COLORES
+//AZUL: #001f3f
+//NARANJA: #FF5733
+//GRIS: 150
+//VERDE: #39FF14
+
+//NODOS: NARANJA
+//ARISTAS: VERDE
+//CARROS: GRIS o BLANCO
+
 Arista arista;
 Carro carro;
 ControlP5 cp5;
@@ -7,20 +17,25 @@ ControlP5 cp5;
 PGraphics configCanvas;
 PGraphics grafoCanvas;
 PFont font;
+PFont fontBTN;
 
 Textfield nodesField;
 Textfield[][] cells;
 Textlabel[] rowLabels;
 Textlabel[] colLabels;
+Textfield[]alphasField;
+
+int[][]tabla;
 
 void setup() {
-  size(1280, 720);
+  size(1920, 1080);
   // background(220);
   cp5 = new ControlP5(this);
   arista = new Arista(30, new PVector(width/2, height/2), new PVector(200, 200), color(255, 255, 255));
   carro = new Carro(width/2, height/2, 1, new PVector(0, 1), 10);
 
   font = createFont("Arial", 16);
+  fontBTN = createFont("Arial Black", 16);
 
   configCanvas = createGraphics(width * 1/2, height);
   // configCanvas.background(#001f3f);
@@ -38,6 +53,7 @@ void setup() {
 void panelConfigUI() {
   nodesField = cp5.addTextfield("NODOS")
     .setPosition(20, 20)
+    .setText("0")
     .setSize(75, 30)
     .setAutoClear(true);
 
@@ -47,22 +63,44 @@ void panelConfigUI() {
   Button btnIncrement = cp5.addButton("incremento")
     .setPosition(110, 20)
     .setSize(30, 30)
-    .setCaptionLabel("+");
+    .setCaptionLabel("+")
+    .setColorBackground(#FF5733);
 
   Button btnDecrement = cp5.addButton("decremento")
     .setPosition(150, 20)
     .setSize(30, 30)
-    .setCaptionLabel("-");
+    .setCaptionLabel("-")
+    .setColorBackground(#FF5733);
 
   btnIncrement.getCaptionLabel().setSize(14);
   btnDecrement.getCaptionLabel().setSize(14);
 
   Button btnCreateTable = cp5.addButton("createTable")
-    .setPosition(200, 20)
-    .setSize(90, 30)
+    .setPosition(width*200/1920, height *20/1080)
+    .setSize(width *120/1920, height*30/1080)
+    .setColorBackground(#FF5733)
+    .setFont(fontBTN)
     .setCaptionLabel("Crear tabla");
 
   btnCreateTable.getCaptionLabel().setSize(14);
+
+  Button btnStart = cp5.addButton("start")
+    .setPosition(width * 400/1920, height*950/1080)
+    .setSize(width*150/1920, height*60/1080)
+    .setColorBackground(#FF5733)
+    .setFont(fontBTN)
+    .setCaptionLabel("Iniciar");
+
+  btnStart.getCaptionLabel().setSize(16);
+  
+    Button btnStop = cp5.addButton("stop")
+    .setPosition(width * 600/1920, height*950/1080)
+    .setSize(width*150/1920, height*60/1080)
+    .setColorBackground(#FF5733)
+    .setFont(fontBTN)
+    .setCaptionLabel("Detener");
+
+  btnStop.getCaptionLabel().setSize(16);
 }
 
 
@@ -79,6 +117,22 @@ void controlEvent(ControlEvent event) {
         print("Error en textfield nodos");
       }
     }
+    if (event.getName().equals("incremento")) {
+      String nodes = nodesField.getText();
+      int numNodes = Integer.parseInt(nodes);
+      numNodes++;
+      String newNodes = String.valueOf(numNodes);
+      nodesField.setText(newNodes);
+    }
+
+    if (event.getName().equals("decremento")) {
+      String nodes = nodesField.getText();
+      int numNodes = Integer.parseInt(nodes);
+      if (numNodes>0) numNodes--;
+
+      String newNodes = String.valueOf(numNodes);
+      nodesField.setText(newNodes);
+    }
   }
 }
 
@@ -86,6 +140,7 @@ void createTable(int rows, int cols) {
   int cellWidth = 50;
   int cellHeight = 40;
   int labelCount = 0;
+  int lastPosition = 0;
 
   if (rows>9) {
     cellWidth = 40;
@@ -112,7 +167,7 @@ void createTable(int rows, int cols) {
           .setPosition(x + j * cellWidth, 90)
           .setColorValue(color(255))
           .setFont(font);
-          labelCount++;
+        labelCount++;
       }
       cells[i][j] = cp5.addTextfield(""+i+"."+j)
         .setPosition(x + j * cellWidth, y + i * cellHeight)
@@ -121,6 +176,24 @@ void createTable(int rows, int cols) {
         .setAutoClear(true)
         .setCaptionLabel("");
     }
+    if (i==rows-1) lastPosition = y+i*cellHeight;
+  }
+
+  alphasRow(rows, lastPosition, cellWidth);
+}
+
+void alphasRow(int nodes, int lastPosition, int cellWidth) {
+  int cellHeight = 40;
+  int x = 40;
+
+  alphasField = new Textfield[nodes];
+
+  for (int i = 0; i<nodes; i++) {
+    alphasField[i] = cp5.addTextfield("a"+i)
+      .setPosition(x + i*cellWidth, lastPosition+70)
+      .setSize(cellWidth, cellHeight)
+      .setFont(font)
+      .setAutoClear(true);
   }
 }
 
