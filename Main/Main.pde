@@ -18,6 +18,8 @@ PGraphics configCanvas;
 PGraphics grafoCanvas;
 PFont font;
 PFont fontBTN;
+boolean alert;
+boolean tableDone;
 
 Textfield nodesField;
 Textfield[][] cells;
@@ -25,7 +27,10 @@ Textlabel[] rowLabels;
 Textlabel[] colLabels;
 Textfield[]alphasField;
 
-int[][]tabla;
+float[][]table;
+float[]alphas;
+int nodes;
+
 
 void setup() {
   size(1920, 1080);
@@ -33,7 +38,7 @@ void setup() {
   cp5 = new ControlP5(this);
   arista = new Arista(30, new PVector(width/2, height/2), new PVector(200, 200), color(255, 255, 255));
   carro = new Carro(width/2, height/2, 1, new PVector(0, 1), 10);
-
+  tableDone = false;
   font = createFont("Arial", 16);
   fontBTN = createFont("Arial Black", 16);
 
@@ -93,7 +98,10 @@ void panelConfigUI() {
 
   btnStart.getCaptionLabel().setSize(16);
   
-    Button btnStop = cp5.addButton("stop")
+  //if(!tableDone) btnStart.setLock(true);
+  //else btnStart.setLock(false);
+
+  Button btnStop = cp5.addButton("stop")
     .setPosition(width * 600/1920, height*950/1080)
     .setSize(width*150/1920, height*60/1080)
     .setColorBackground(#FF5733)
@@ -109,9 +117,10 @@ void controlEvent(ControlEvent event) {
   if (event.isController()) {
     if (event.getName().equals("createTable")) {
       try {
-        String nodes = nodesField.getText();
-        int numNodes = Integer.parseInt(nodes);
-        createTable(numNodes, numNodes);
+        String nodes1 = nodesField.getText();
+        nodes = Integer.parseInt(nodes1);
+        createTable(nodes, nodes);
+        tableDone = true;
       }
       catch(Error error) {
         print("Error en textfield nodos");
@@ -132,6 +141,10 @@ void controlEvent(ControlEvent event) {
 
       String newNodes = String.valueOf(numNodes);
       nodesField.setText(newNodes);
+    }
+    
+    if(event.getName().equals("start")){
+      startSimulation();
     }
   }
 }
@@ -197,6 +210,40 @@ void alphasRow(int nodes, int lastPosition, int cellWidth) {
   }
 }
 
+void checkTable() {
+}
+
+void startSimulation() {
+  String cell;
+  float cellValue;
+  String alphaCell;
+  float alphaValue;
+  
+  alphas = new float[nodes];
+  table = new float[nodes][nodes];
+  for (int i = 0; i<nodes; i++) {
+    alphaCell = alphasField[i].getText();
+    if (alphaCell.equals("") || alphaCell.equals(" ")) {
+      alphaValue = 0;
+    } else {
+      alphaValue = Float.parseFloat(alphaCell);
+    }
+    alphas[i] = alphaValue;
+    println("a"+i+" = "+alphas[i]);
+
+    for (int j = 0; j<nodes; j++) {
+      cell = cells[i][j].getText();
+      if (cell.equals("") || cell.equals(" ")) {
+        cellValue = 0;
+      } else {
+        cellValue = Float.parseFloat(cell);
+      }
+
+      table[i][j] = cellValue;
+      println("i: "+i+" - j: "+j+" = "+table[i][j]);
+    }
+  }
+}
 
 void draw() {
   background(255);
@@ -212,6 +259,7 @@ void draw() {
   image(configCanvas, 0, 0);
   drawGrafoCanvas();
   image(grafoCanvas, width/2.5, 0);
+  
 }
 
 void drawGrafoCanvas() {
