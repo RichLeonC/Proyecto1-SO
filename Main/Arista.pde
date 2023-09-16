@@ -14,6 +14,7 @@ class Arista {
   Arista(float distancia, int origen, int destino){
     this.nodoOrigenId = origen;
     this.nodoDestinoId = destino;
+    this.distancia = distancia;
   }
   
   void setDistancia(float distancia){
@@ -30,7 +31,7 @@ class Arista {
     PVector dest = PVector.add(destinoPos, dif);
     x2 = dest.x;
     y2 = dest.y;
-    stroke(255,231,128);
+    stroke(210,107,219);
     strokeWeight(3);
     line(x1,y1,x2,y2);
   }

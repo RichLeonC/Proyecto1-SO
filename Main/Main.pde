@@ -31,14 +31,15 @@ Textfield[]alphasField;
 float[][]table;
 float[]alphas;
 int nodes;
+int espera1 = 1 ;
+int espera2 = 1;
 
 
 void setup() {
   size(1920, 1080);
-  // background(220);
   cp5 = new ControlP5(this);
   //arista = new Arista(30, new PVector(width/2, height/2), new PVector(200, 200), color(255, 255, 255));
-  carro = new Carro(width/2, height/2, 1, new PVector(0, 1), 10);
+  //carro = new Carro(width/2, height/2, 1, new PVector(0, 1), 10);
   tableDone = false;
   font = createFont("Arial", 16);
   fontBTN = createFont("Arial Black", 16);
@@ -261,7 +262,8 @@ void startSimulation() {
 }
 
 void draw() {
-  background(255);
+  //background(255);
+  background(180,180,180);
   grafo.display();
   //arista.display();
   // carro.display();

@@ -3,6 +3,7 @@ class Grafo{
   private ArrayList<Arista> aristas;
   private ArrayList<Carro> carros;
   private int radio = 300;
+  public int nCarros;
   
   Grafo(){
     this.nodos = new ArrayList();
@@ -35,9 +36,8 @@ class Grafo{
   
   }
   
-  public void addCarro(float x, float y,float velocidad,int objetivoId,float radio){
-    PVector objetivoPos = grafo.getNodos().get(objetivoId).pos;
-    carros.add(new Carro(x,y,velocidad,objetivoPos,radio));
+  public void addCarro(float x, float y,float velocidad,int objetivoId,float radio, int id){
+    carros.add(new Carro(x,y,velocidad,objetivoId,radio*5, id));
   }
   
   public ArrayList<Nodo> dijkstra(Nodo inicio,Nodo destino){
@@ -64,11 +64,12 @@ class Grafo{
   }
   
   public void display(){
-    for (Nodo nodo : nodos) {
-      nodo.display();
-    }
     for(Arista arista : aristas) {
       arista.display();
+    }
+    for (Nodo nodo : nodos) {
+      nodo.update();
+      nodo.display();
     }
     for(Carro carro : carros) {
       carro.update();
