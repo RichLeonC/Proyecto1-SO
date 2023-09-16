@@ -20,6 +20,7 @@ PFont font;
 PFont fontBTN;
 boolean alert;
 boolean tableDone;
+Grafo grafo = new Grafo();
 
 Textfield nodesField;
 Textfield[][] cells;
@@ -36,7 +37,7 @@ void setup() {
   size(1920, 1080);
   // background(220);
   cp5 = new ControlP5(this);
-  arista = new Arista(30, new PVector(width/2, height/2), new PVector(200, 200), color(255, 255, 255));
+  //arista = new Arista(30, new PVector(width/2, height/2), new PVector(200, 200), color(255, 255, 255));
   carro = new Carro(width/2, height/2, 1, new PVector(0, 1), 10);
   tableDone = false;
   font = createFont("Arial", 16);
@@ -113,13 +114,24 @@ void panelConfigUI() {
 
 
 
+
 void controlEvent(ControlEvent event) {
   if (event.isController()) {
+    for (int i = 0; i < nodes; i++) {
+      for (int j = 0; j < nodes; j++) {
+      String textFieldName = i + "." + j;
+      if (event.getName().equals(textFieldName)) {
+        String texto = event.getStringValue();
+        println("Texto en " + textFieldName + ": " + texto);
+      }
+     }
+   }
     if (event.getName().equals("createTable")) {
       try {
         String nodes1 = nodesField.getText();
         nodes = Integer.parseInt(nodes1);
         createTable(nodes, nodes);
+        grafo.generarNodos(nodes);
         tableDone = true;
       }
       catch(Error error) {
@@ -154,7 +166,7 @@ void createTable(int rows, int cols) {
   int cellHeight = 40;
   int labelCount = 0;
   int lastPosition = 0;
-
+  
   if (rows>9) {
     cellWidth = 40;
   }
@@ -186,8 +198,8 @@ void createTable(int rows, int cols) {
         .setPosition(x + j * cellWidth, y + i * cellHeight)
         .setSize(cellWidth, cellHeight)
         .setFont(font)
-        .setAutoClear(true)
-        .setCaptionLabel("");
+        .setCaptionLabel("")
+        .setAutoClear(false);
     }
     if (i==rows-1) lastPosition = y+i*cellHeight;
   }
@@ -240,6 +252,9 @@ void startSimulation() {
       }
 
       table[i][j] = cellValue;
+      if(cellValue != 0){
+        grafo.addArista(table[i][j],i,j);
+      }
       println("i: "+i+" - j: "+j+" = "+table[i][j]);
     }
   }
@@ -247,6 +262,7 @@ void startSimulation() {
 
 void draw() {
   background(255);
+  grafo.display();
   //arista.display();
   // carro.display();
   //carro.update();
@@ -254,10 +270,10 @@ void draw() {
   strokeWeight(10);
   noFill();
   rect(0, 0, width / 2.5, height);
-
+  //grafo.display();
   drawConfigCanvas();
   image(configCanvas, 0, 0);
-  drawGrafoCanvas();
+  //drawGrafoCanvas();
   image(grafoCanvas, width/2.5, 0);
   
 }
@@ -265,7 +281,6 @@ void draw() {
 void drawGrafoCanvas() {
   grafoCanvas.beginDraw();
   grafoCanvas.background(#001f3f);
-
   // LOS DIBUJOS DE LOS NODOS,ARISTAS, CARROS IRAN ACA
 
   grafoCanvas.endDraw();

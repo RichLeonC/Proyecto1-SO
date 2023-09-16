@@ -3,6 +3,7 @@ class Grafo{
   private ArrayList<Arista> aristas;
   private ArrayList<Carro> carros;
   private static final int INF = Integer.MAX_VALUE;  //valor asignado como distancia que no interesa o interfiere en lo final
+  private int radio = 300;
   
   Grafo(){
     this.nodos = new ArrayList();
@@ -11,18 +12,33 @@ class Grafo{
   
   }
   
-  public void addNodo(float radio,PVector pos,float alpha){
+  /*public void addNodo(float radio,PVector pos,float alpha){
     nodos.add(new Nodo(radio,pos,alpha));
     
+  }*/
+  
+  public void generarNodos(float numNodos){
+    int centroX = width * 1320 / 1920;
+    int centroY = height/2;
+    nodos = new ArrayList();
+    for (int i = 0; i < numNodos; i++) {
+      float angulo = TWO_PI / numNodos * i;
+      float x = centroX + cos(angulo) * radio;
+      float y = centroY + sin(angulo) * radio;
+      nodos.add(new Nodo(constrain(radio/numNodos,30,30),new PVector(x,y),2,i));
+    }
   }
   
-  public void addArista(float distancia,PVector nodoOrigen, PVector nodoDestino,color c){
-    aristas.add(new Arista(distancia,nodoOrigen,nodoDestino,c));
+  public void addArista(float distancia,int nOrigen, int nDestino){
+    Arista a = new Arista(distancia,nOrigen,nDestino);
+    nodos.get(nOrigen).addArista(a);
+    aristas.add(a);
   
   }
   
-  public void addCarro(float x, float y,float velocidad,PVector direccion,float radio){
-    carros.add(new Carro(x,y,velocidad,direccion,radio));
+  public void addCarro(float x, float y,float velocidad,int objetivoId,float radio){
+    PVector objetivoPos = grafo.getNodos().get(objetivoId).pos;
+    carros.add(new Carro(x,y,velocidad,objetivoPos,radio));
   }
   
   public ArrayList<Nodo> dijkstra(ArrayList<Arista> grafo,Nodo inicio,Nodo destino){
@@ -75,9 +91,25 @@ class Grafo{
   
   }
   
+  public ArrayList<Carro> getCarros(){
+    return carros;
+  }
+  
+  public ArrayList<Nodo> getNodos(){
+    return nodos;
+  }
+  
   public void display(){
-  
-  
+    for (Nodo nodo : nodos) {
+      nodo.display();
+    }
+    for(Arista arista : aristas) {
+      arista.display();
+    }
+    for(Carro carro : carros) {
+      carro.update();
+      carro.display();
+    }
   }
   
   public void update(){
