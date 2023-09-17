@@ -41,7 +41,7 @@ class Grafo{
     carros.add(new Carro(x,y,velocidad,objetivoId,radio*5, id));
   }
   
-  public ArrayList<Nodo> dijkstra(ArrayList<Arista> grafo,Nodo inicio,Nodo destino){
+  /*public ArrayList<Nodo> dijkstra(ArrayList<Arista> grafo,Nodo inicio,Nodo destino){
  
     boolean[] visitado = new boolean[ grafo.size()]; // marcas de nodos visitados
     int [] distancia = new int[ grafo.size()];//guarda la distnacias de las aristas 
@@ -64,7 +64,7 @@ class Grafo{
     
     ArrayList<Nodo> nodosFinales = new ArrayList();
     return nodosFinales;
-  }
+  }*/
   
   public int vecinoMasConfiable(int[] distancia, boolean[] visitado){
        int min = INF;

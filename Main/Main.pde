@@ -20,6 +20,8 @@ PFont font;
 PFont fontBTN;
 boolean alert;
 boolean tableDone;
+Thread[] hilos = new Thread[100];
+int nHilos = 0;
 Grafo grafo = new Grafo();
 
 Textfield nodesField;
@@ -242,6 +244,7 @@ void startSimulation() {
       alphaValue = Float.parseFloat(alphaCell);
     }
     alphas[i] = alphaValue;
+    grafo.getNodos().get(i).setAlpha(alphas[i]);
     println("a"+i+" = "+alphas[i]);
 
     for (int j = 0; j<nodes; j++) {

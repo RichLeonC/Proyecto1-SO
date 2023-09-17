@@ -1,4 +1,4 @@
-class Nodo {
+class Nodo extends Thread {
   private int id;
   private float radio;
   private PVector pos;
@@ -9,6 +9,10 @@ class Nodo {
   int lastTime = 0;
   int current;
   int cruzando = 0;
+  
+  void setAlpha(float alpha){
+    this.alpha = alpha;
+  }
   
   Nodo(float radio, PVector pos, float alpha, int id){
       this.id = id;
@@ -23,16 +27,13 @@ class Nodo {
   }
 
   public void generarCarro(){
-      int i = grafo.nCarros;
+      int i = 0;
       println("Id: " + id + " aristas: " + aristas.size() + "\n");
       for(Arista a : aristas){
         float distanciaEstablecida = a.distancia; // Distancia establecida en kilómetros
         float distanciaReal = pos.dist(grafo.getNodos().get(a.nodoDestinoId).pos); // Distancia real en píxeles
-        // Calcular la velocidad en función de la distancia establecida
-        float velocidadEstablecida = distanciaReal * (9.01*distanciaEstablecida/10)/distanciaReal;
-        float distancia = pos.dist(grafo.getNodos().get(a.nodoDestinoId).pos);
         float segundosAdurar = a.distancia/10;
-        grafo.addCarro(pos.x, pos.y, distanciaReal / segundosAdurar / 6.5, a.nodoDestinoId, radio/10, i);
+        grafo.addCarro(pos.x, pos.y, distanciaReal / segundosAdurar / 6.5, a.nodoDestinoId, radio/10, grafo.nCarros);
         i++;
         grafo.nCarros++;
       }
@@ -74,7 +75,7 @@ class Nodo {
     fill(255);
     text(id, pos.x-5, pos.y+5);
     current = millis();
-    if (current - lastTime >= 2000) {
+    if (current - lastTime >= (1000/1/alpha)) {
       lastTime = current;
       generarCarro();      
     }

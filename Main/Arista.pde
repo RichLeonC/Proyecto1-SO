@@ -34,6 +34,9 @@ class Arista {
     stroke(210,107,219);
     strokeWeight(3);
     line(x1,y1,x2,y2);
+    PVector centro = new PVector(origenPos.x + (destinoPos.x - origenPos.x)*0.5,
+                                  origenPos.y + (destinoPos.y - origenPos.y)*0.5);
+    text((int)distancia, centro.x, centro.y);
   }
 
 }
