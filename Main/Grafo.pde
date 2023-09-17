@@ -41,55 +41,101 @@ class Grafo{
     carros.add(new Carro(x,y,velocidad,objetivoId,radio*5, id));
   }
   
-  public ArrayList<Nodo> dijkstra(ArrayList<Arista> grafo,Nodo inicio,Nodo destino){
- 
-    boolean[] visitado = new boolean[ grafo.size()]; // marcas de nodos visitados
-    int [] distancia = new int[ grafo.size()];//guarda la distnacias de las aristas 
-    
-      for (int i = 0; i < grafo.size(); i++) {
-            distancia[i] = INF;//asigna todos como valores que no interesan aun para despues cambiarlos
+  public   HashMap<Nodo, Integer> dijkstra(ArrayList<Nodo> grafo,Nodo inicio,Nodo destino){
+       HashMap<Integer, Integer> distancias = new HashMap<>();
+       HashMap<Nodo, Nodo> padres = new HashMap<>();
+       ArrayList<Nodo> visitados = new ArrayList();
+       ArrayList<Nodo> recorrido = new ArrayList();
+       
+       
+         for (Nodo nodo : grafo) {
+            distancias.put(nodo.getID(), Integer.MAX_VALUE);
+        }
+        
+        distancias.put(inicio.getID(), 0);
+        Nodo actual = inicio;
+        
+        while(!visitados.contains(destino)){
+            visitados.add(actual);
+          //  ArrayList<Arista> vecinos = actual.getAristas(); 
+            
+            
+             for (Arista arista : actual.getAristas()) {
+                if (!visitados.contains(getNodoPorId(arista.getDestino()))) {
+                    float distanciaTentativa = distancias.get(actual.getID()) + arista.distancia;
+                    if (distanciaTentativa < distancias.get(arista.nodoDestinoId)) { //compara el comino con el infinito anteriormente guardado
+                        distancias.put(arista.nodoDestinoId, int (distanciaTentativa));
+                        padres.put(getNodoPorId(arista.getDestino()), actual);// guarda nodo como destino como key, guarda el nodo actual
+                        
+                    }
+                }
+            }
+            
+            Nodo nodoMinDistancia = null;
+            int minDistancia = Integer.MAX_VALUE;
+            
+             for (Nodo nodo : grafo) {
+                if (!visitados.contains(nodo) && distancias.get(nodo.getID()) < minDistancia) {
+                    nodoMinDistancia = nodo;
+                    minDistancia = distancias.get(nodo.getID());
+                }
+            }
+            if (nodoMinDistancia == null) {
+                break;
+            }
+
+            actual = nodoMinDistancia;
+         
+        
         }
        
-       distancia[inicio.getNombre()] = 0; 
-      
-      for (int i = 0; i < grafo.size()-1; i++){
-          int distanciaMin = vecinoMasConfiable(distancia, visitado);
-          visitado[distanciaMin] = true;
-          
-          
-      
+       
+  
+        return obtenerCaminoMasCorto(padres, inicio, destino);
       }
       
     
-    
-    ArrayList<Nodo> nodosFinales = new ArrayList();
-    return nodosFinales;
-  }
-  
-  public int vecinoMasConfiable(int[] distancia, boolean[] visitado){
-       int min = INF;
-       int vecino = -1;
+       private  HashMap<Nodo, Integer> obtenerCaminoMasCorto(HashMap<Nodo, Nodo> padres, Nodo inicio, Nodo destino) {
+        HashMap<Nodo, Integer> caminoMasCorto = new HashMap<>();
+        Nodo actual = destino;
+        int distanciaTotal = 0;
 
-        for (int i = 0; i < distancia.length; i++) {
-            if (!visitado[i] && distancia[i] < min) {
-                min = distancia[i];
-                vecino = i;
+        while (actual != null) {
+            caminoMasCorto.put(actual, distanciaTotal);
+            if (actual == inicio) {
+                break;
             }
+            distanciaTotal += obtenerPesoArista(padres.get(actual), actual);
+            actual = padres.get(actual);
         }
-     
-    return vecino;
-  }
+
+        return caminoMasCorto;
+    }
   
   
-  public ArrayList<Nodo> getNodosVecinos(Nodo nodo){
-    ArrayList<Nodo> vecinos = new ArrayList();
-    return vecinos;
-  }
+      private  float obtenerPesoArista(Nodo origen, Nodo destino) {
+        for (Arista arista : origen.aristas) {
+            if (arista.nodoDestinoId == destino.getID()) {
+                return arista.distancia;
+            }
+        } 
+        return Integer.MAX_VALUE;
+    }
+ 
   
   public void borrarCarros(){
     carros.clear();
   
-  }
+  } 
+
+   public Nodo getNodoPorId(int id) {
+        for (Nodo nodo : nodos) {
+            if (nodo.getID() == id) {
+                return nodo;
+            }
+        }
+        return null; 
+    }
   
   public ArrayList<Carro> getCarros(){
     return carros;
@@ -98,6 +144,8 @@ class Grafo{
   public ArrayList<Nodo> getNodos(){
     return nodos;
   }
+  
+ 
   
   public void display(){
     for(Arista arista : aristas) {

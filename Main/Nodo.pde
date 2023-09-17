@@ -21,6 +21,7 @@ class Nodo {
       this.current = millis();
   
   }
+  
 
   public void generarCarro(){
       int i = grafo.nCarros;
@@ -86,6 +87,15 @@ class Nodo {
       siguienteCarro();
       ocupado = true;
     }
+  }
+  
+  public int getID(){
+    return id;
+  }
+  
+
+  public ArrayList<Arista> getAristas(){
+    return aristas;
   }
 
 }
