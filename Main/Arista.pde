@@ -21,6 +21,11 @@ class Arista {
     this.distancia = distancia;
   }
   
+   public int getDestino(){
+    return nodoDestinoId;
+  }
+  
+  
   void display(){
     PVector origenPos = grafo.getNodos().get(nodoOrigenId).pos;
     PVector destinoPos = grafo.getNodos().get(nodoDestinoId).pos; 

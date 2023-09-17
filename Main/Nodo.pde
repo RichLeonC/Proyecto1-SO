@@ -25,6 +25,7 @@ class Nodo extends Thread {
       this.current = millis();
   
   }
+  
 
   public void generarCarro(){
       int i = 0;
@@ -87,6 +88,15 @@ class Nodo extends Thread {
       siguienteCarro();
       ocupado = true;
     }
+  }
+  
+  public int getID(){
+    return id;
+  }
+  
+
+  public ArrayList<Arista> getAristas(){
+    return aristas;
   }
 
 }
