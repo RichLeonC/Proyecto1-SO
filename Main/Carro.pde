@@ -111,6 +111,13 @@ class Carro{
     //stroke(153,246,214);
     fill(red(c),blue(c),green(c));
     circle(pos.x,pos.y,radio*2);
+    PVector v = new PVector(mouseX, mouseY);
+    float distancia = PVector.dist(v, this.pos);
+    if(distancia <= this.radio*2){
+      println("Distancia: ", distancia);
+      fill(0);
+      text("Objetivo es nodo " + objetivoId, this.pos.x, this.pos.y);
+    }
   }
 
 }
