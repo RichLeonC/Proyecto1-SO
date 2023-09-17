@@ -41,7 +41,7 @@ class Grafo{
     carros.add(new Carro(x,y,velocidad,objetivoId,radio*5, id));
   }
   
-  public   HashMap<Nodo, Integer> dijkstra(ArrayList<Nodo> grafo,Nodo inicio,Nodo destino){
+  public  ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo,Nodo inicio,Nodo destino){
        HashMap<Integer, Integer> distancias = new HashMap<>();
        HashMap<Nodo, Nodo> padres = new HashMap<>();
        ArrayList<Nodo> visitados = new ArrayList();
@@ -61,11 +61,12 @@ class Grafo{
             
             
              for (Arista arista : actual.getAristas()) {
-                if (!visitados.contains(getNodoPorId(arista.getDestino()))) {
+                if (!visitados.contains(getNodoPorId(arista.getDestino()))) {//el si el nodo actual no esta visitado
                     float distanciaTentativa = distancias.get(actual.getID()) + arista.distancia;
-                    if (distanciaTentativa < distancias.get(arista.nodoDestinoId)) { //compara el comino con el infinito anteriormente guardado
+                    if (distanciaTentativa < distancias.get(arista.nodoDestinoId)) { //compara el comino con el infinito anteriormente guardado primera vez , depsues ya con la que haya
                         distancias.put(arista.nodoDestinoId, int (distanciaTentativa));
                         padres.put(getNodoPorId(arista.getDestino()), actual);// guarda nodo como destino como key, guarda el nodo actual
+                         
                         
                     }
                 }
@@ -75,9 +76,9 @@ class Grafo{
             int minDistancia = Integer.MAX_VALUE;
             
              for (Nodo nodo : grafo) {
-                if (!visitados.contains(nodo) && distancias.get(nodo.getID()) < minDistancia) {
-                    nodoMinDistancia = nodo;
-                    minDistancia = distancias.get(nodo.getID());
+                if (!visitados.contains(nodo) && distancias.get(nodo.getID()) < minDistancia) {//si el nodo no fue visitado y la distancia del nodo  es menor al infinito 
+                    nodoMinDistancia = nodo;//se asigna como el nodo que tiene la menor distancia
+                    minDistancia = distancias.get(nodo.getID());// y la minima distancia pasa a ser la del nodo que estoy recorriendo 
                 }
             }
             if (nodoMinDistancia == null) {
@@ -90,18 +91,20 @@ class Grafo{
         }
        
        
-  
-        return obtenerCaminoMasCorto(padres, inicio, destino);
+        recorrido = (ArrayList)padres.keySet();
+        return recorrido;
       }
       
     
        private  HashMap<Nodo, Integer> obtenerCaminoMasCorto(HashMap<Nodo, Nodo> padres, Nodo inicio, Nodo destino) {
         HashMap<Nodo, Integer> caminoMasCorto = new HashMap<>();
+        ArrayList<Nodo> recorrido = new ArrayList();
         Nodo actual = destino;
         int distanciaTotal = 0;
 
         while (actual != null) {
-            caminoMasCorto.put(actual, distanciaTotal);
+          //  caminoMasCorto.put(actual, distanciaTotal);
+            recorrido.add(actual);
             if (actual == inicio) {
                 break;
             }
