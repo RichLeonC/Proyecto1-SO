@@ -36,12 +36,15 @@ int nodes;
 int espera1 = 1 ;
 int espera2 = 1;
 
+float offsetX = 0;
+float offsetY = 0;
+float zoom = 1.0;
+float mouseXOffset, mouseYOffset;
 
 void setup() {
   size(1920, 1080);
   cp5 = new ControlP5(this);
-  //arista = new Arista(30, new PVector(width/2, height/2), new PVector(200, 200), color(255, 255, 255));
-  //carro = new Carro(width/2, height/2, 1, new PVector(0, 1), 10);
+
   tableDone = false;
   font = createFont("Arial", 16);
   fontBTN = createFont("Arial Black", 16);
@@ -50,13 +53,8 @@ void setup() {
   // configCanvas.background(#001f3f);
   grafoCanvas = createGraphics(width * 3/4, height);
 
-  Group configGroup = cp5.addGroup("Config")
-    .setPosition(0, 0)
-    .setWidth(width / 4)
-    .setHeight(height);
-
-
   panelConfigUI();
+ 
 }
 
 void panelConfigUI() {
@@ -101,7 +99,7 @@ void panelConfigUI() {
     .setCaptionLabel("Iniciar");
 
   btnStart.getCaptionLabel().setSize(16);
-  
+
   //if(!tableDone) btnStart.setLock(true);
   //else btnStart.setLock(false);
 
@@ -122,13 +120,13 @@ void controlEvent(ControlEvent event) {
   if (event.isController()) {
     for (int i = 0; i < nodes; i++) {
       for (int j = 0; j < nodes; j++) {
-      String textFieldName = i + "." + j;
-      if (event.getName().equals(textFieldName)) {
-        String texto = event.getStringValue();
-        println("Texto en " + textFieldName + ": " + texto);
+        String textFieldName = i + "." + j;
+        if (event.getName().equals(textFieldName)) {
+          String texto = event.getStringValue();
+          println("Texto en " + textFieldName + ": " + texto);
+        }
       }
-     }
-   }
+    }
     if (event.getName().equals("createTable")) {
       try {
         String nodes1 = nodesField.getText();
@@ -157,8 +155,8 @@ void controlEvent(ControlEvent event) {
       String newNodes = String.valueOf(numNodes);
       nodesField.setText(newNodes);
     }
-    
-    if(event.getName().equals("start")){
+
+    if (event.getName().equals("start")) {
       startSimulation();
     }
   }
@@ -169,7 +167,7 @@ void createTable(int rows, int cols) {
   int cellHeight = 40;
   int labelCount = 0;
   int lastPosition = 0;
-  
+
   if (rows>9) {
     cellWidth = 40;
   }
@@ -233,7 +231,7 @@ void startSimulation() {
   float cellValue;
   String alphaCell;
   float alphaValue;
-  
+
   alphas = new float[nodes];
   table = new float[nodes][nodes];
   for (int i = 0; i<nodes; i++) {
@@ -256,8 +254,8 @@ void startSimulation() {
       }
 
       table[i][j] = cellValue;
-      if(cellValue != 0){
-        grafo.addArista(table[i][j],i,j);
+      if (cellValue != 0) {
+        grafo.addArista(table[i][j], i, j);
       }
       println("i: "+i+" - j: "+j+" = "+table[i][j]);
     }
@@ -265,22 +263,23 @@ void startSimulation() {
 }
 
 void draw() {
-  //background(255);
-  background(180,180,180);
+   
+  background(180, 180, 180);
+  pushMatrix();
+  translate(offsetX, offsetY);
+  scale(zoom);
   grafo.display();
-  //arista.display();
-  // carro.display();
-  //carro.update();
+
   stroke(0);
   strokeWeight(10);
   noFill();
-  rect(0, 0, width / 2.5, height);
+  popMatrix();
+  // rect(0, 0, width / 2.5, height);
   //grafo.display();
-  drawConfigCanvas();
-  image(configCanvas, 0, 0);
+  // drawConfigCanvas();
+  // image(configCanvas, 0, 0);
   //drawGrafoCanvas();
-  image(grafoCanvas, width/2.5, 0);
-  
+  // image(grafoCanvas, width/2.5, 0);
 }
 
 void drawGrafoCanvas() {
@@ -298,4 +297,21 @@ void drawConfigCanvas() {
 
 
   configCanvas.endDraw();
+}
+
+void mouseDragged() {
+  float deltaX = mouseX - pmouseX;
+  float deltaY = mouseY - pmouseY;
+
+  offsetX += deltaX*zoom;
+  offsetY += deltaY*zoom;
+}
+
+void mouseWheel(MouseEvent event) {
+  float e = event.getCount();
+  float zoomSpeed = 0.05;
+
+  zoom += e * zoomSpeed;
+
+  zoom = constrain(zoom, 0.5, 3.0);
 }
