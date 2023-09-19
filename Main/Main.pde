@@ -250,11 +250,11 @@ void statitics() {
   // textSize(16);
   textFont(fontBTN);
   textAlign(LEFT, TOP);
-  text("Estadísticas", 1650, 30);
+  text("Estadísticas", width*1650/1920, 30);
   textAlign(LEFT);
-  text("Tiempo de simulación: "+finalTime, 1510, 120);
-  text("Cantidad de vehiculos: "+grafo.nCarros, 1510, 180);
-  text("Velocidad promedio: ", 1510, 240);
+  text("Tiempo de simulación: "+finalTime, width*1510/1920, height*120/1080);
+  text("Cantidad de vehiculos: "+grafo.nCarros, width*1510/1920, height*180/1080);
+  text("Velocidad promedio: ", width*1510/1920, height*240/1080);
 
 
   //text("SimultTime:")

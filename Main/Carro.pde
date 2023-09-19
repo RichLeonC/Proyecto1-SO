@@ -80,7 +80,7 @@ class Carro{
     }else{
         if ((distancia <= grafo.getNodos().get(objetivoId).radio + this.radio) && !esperando) {
           this.esperando = true;
-          println(millis()-horaSalida);
+          //println(millis()-horaSalida);
           grafo.getNodos().get(objetivoId).carrosEspera.add(this);
           return true;
       }
