@@ -41,6 +41,9 @@ float offsetY = 0;
 float zoom = 1.0;
 float mouseXOffset, mouseYOffset;
 
+long time = 0;
+boolean startTime = false;
+
 void setup() {
   size(1920, 1080);
   cp5 = new ControlP5(this);
@@ -157,6 +160,8 @@ void controlEvent(ControlEvent event) {
 
     if (event.getName().equals("start")) {
       startSimulation();
+      time = millis();
+      startTime = true;
     }
   }
 }
@@ -225,24 +230,53 @@ void alphasRow(int nodes, int lastPosition, int cellWidth) {
 }
 
 void statitics() {
+  long elapsedTime = 0;
+  String finalTime = "00:00:00";
+  if(startTime){
+    elapsedTime = millis() - time;
+    finalTime = formatearTiempo(elapsedTime);
+  }
+  
   pushStyle();
   stroke(#FF5733);
   strokeWeight(3);
   fill(#001f3f);
   rect(width*1500/1920, height*10/1080, 400, 250);
   fill(255);
-  
-  
-  
+
+
+
   // textSize(16);
   textFont(fontBTN);
-  textAlign(LEFT,TOP);
+  textAlign(LEFT, TOP);
   text("Estadísticas", 1650, 30);
   textAlign(LEFT);
+  text("Tiempo de simulación: "+finalTime, 1510, 120);
+  text("Cantidad de vehiculos: ", 1510, 180);
+  text("Velocidad promedio: ", 1510, 240);
 
-  text("Cantidad de vehiculos:",1510,120);
+
   //text("SimultTime:")
   popStyle();
+}
+
+String formatearTiempo(long milisegundos) {
+  int segundos = (int)(milisegundos / 1000);
+  int minutos = segundos / 60;
+  int horas = minutos / 60;
+  segundos %= 60;
+  minutos %= 60;
+  horas %= 24;
+  
+  // Formatea los componentes de tiempo con al menos dos dígitos
+  String horaFormateada = nf(horas, 2);
+  String minutosFormateados = nf(minutos, 2);
+  String segundosFormateados = nf(segundos, 2);
+  
+  // Combina los componentes en el formato HH:MM:SS
+  String tiempoFormateado = horaFormateada + ":" + minutosFormateados + ":" + segundosFormateados;
+  
+  return tiempoFormateado;
 }
 
 void startSimulation() {
