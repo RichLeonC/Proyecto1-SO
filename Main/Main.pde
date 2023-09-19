@@ -54,7 +54,6 @@ void setup() {
   grafoCanvas = createGraphics(width * 3/4, height);
 
   panelConfigUI();
- 
 }
 
 void panelConfigUI() {
@@ -168,8 +167,9 @@ void createTable(int rows, int cols) {
   int labelCount = 0;
   int lastPosition = 0;
 
-  if (rows>9) {
-    cellWidth = 40;
+  if (rows>15) {
+    cellWidth = 30;
+    cellHeight = 30;
   }
 
   cells = new Textfield[rows][cols];
@@ -206,6 +206,7 @@ void createTable(int rows, int cols) {
   }
 
   alphasRow(rows, lastPosition, cellWidth);
+  statitics();
 }
 
 void alphasRow(int nodes, int lastPosition, int cellWidth) {
@@ -223,7 +224,25 @@ void alphasRow(int nodes, int lastPosition, int cellWidth) {
   }
 }
 
-void checkTable() {
+void statitics() {
+  pushStyle();
+  stroke(#FF5733);
+  strokeWeight(3);
+  fill(#001f3f);
+  rect(width*1500/1920, height*10/1080, 400, 250);
+  fill(255);
+  
+  
+  
+  // textSize(16);
+  textFont(fontBTN);
+  textAlign(LEFT,TOP);
+  text("Estadísticas", 1650, 30);
+  textAlign(LEFT);
+
+  text("Cantidad de vehiculos:",1510,120);
+  //text("SimultTime:")
+  popStyle();
 }
 
 void startSimulation() {
@@ -263,8 +282,9 @@ void startSimulation() {
 }
 
 void draw() {
-   
+
   background(180, 180, 180);
+  statitics();
   pushMatrix();
   translate(offsetX, offsetY);
   scale(zoom);
