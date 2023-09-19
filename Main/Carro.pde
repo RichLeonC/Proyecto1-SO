@@ -73,7 +73,7 @@ class Carro{
     if(grafo.getNodos().get(objetivoId).carrosEspera.size() != 0){
       if ((distancia <= grafo.getNodos().get(objetivoId).radio + this.radio + this.radio*2 * (grafo.getNodos().get(objetivoId).carrosEspera.size()+1)) && !esperando) {
           this.esperando = true;
-          println(millis()-horaSalida);
+         // println(millis()-horaSalida);
           grafo.getNodos().get(objetivoId).carrosEspera.add(this);
           return true;
       }
@@ -114,9 +114,9 @@ class Carro{
     PVector v = new PVector(mouseX, mouseY);
     float distancia = PVector.dist(v, this.pos);
     if(distancia <= this.radio*2){
-      println("Distancia: ", distancia);
+     // println("Distancia: ", distancia);
       fill(0);
-      text("Objetivo es nodo " + objetivoId, this.pos.x, this.pos.y);
+     // text("Objetivo es nodo " + objetivoId, this.pos.x, this.pos.y);
     }
   }
 

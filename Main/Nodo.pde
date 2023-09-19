@@ -29,7 +29,7 @@ class Nodo extends Thread {
 
   public void generarCarro(){
       int i = 0;
-      println("Id: " + id + " aristas: " + aristas.size() + "\n");
+     // println("Id: " + id + " aristas: " + aristas.size() + "\n");
       for(Arista a : aristas){
         float distanciaEstablecida = a.distancia; // Distancia establecida en kilómetros
         float distanciaReal = pos.dist(grafo.getNodos().get(a.nodoDestinoId).pos); // Distancia real en píxeles
@@ -60,6 +60,7 @@ class Nodo extends Thread {
          next2 = next3.copy();
          i++;
       }
+      grafo.nCarros--;
     }else{
       ocupado = false;
     }
@@ -87,6 +88,7 @@ class Nodo extends Thread {
       cruzando = millis();
       siguienteCarro();
       ocupado = true;
+      
     }
   }
   

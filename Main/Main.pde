@@ -43,6 +43,7 @@ float mouseXOffset, mouseYOffset;
 
 long time = 0;
 boolean startTime = false;
+int carsCount = 0;
 
 void setup() {
   size(1920, 1080);
@@ -252,7 +253,7 @@ void statitics() {
   text("Estadísticas", 1650, 30);
   textAlign(LEFT);
   text("Tiempo de simulación: "+finalTime, 1510, 120);
-  text("Cantidad de vehiculos: ", 1510, 180);
+  text("Cantidad de vehiculos: "+grafo.nCarros, 1510, 180);
   text("Velocidad promedio: ", 1510, 240);
 
 
@@ -296,7 +297,7 @@ void startSimulation() {
     }
     alphas[i] = alphaValue;
     grafo.getNodos().get(i).setAlpha(alphas[i]);
-    println("a"+i+" = "+alphas[i]);
+    //println("a"+i+" = "+alphas[i]);
 
     for (int j = 0; j<nodes; j++) {
       cell = cells[i][j].getText();
@@ -310,7 +311,7 @@ void startSimulation() {
       if (cellValue != 0) {
         grafo.addArista(table[i][j], i, j);
       }
-      println("i: "+i+" - j: "+j+" = "+table[i][j]);
+     // println("i: "+i+" - j: "+j+" = "+table[i][j]);
     }
   }
 }
@@ -328,12 +329,6 @@ void draw() {
   strokeWeight(10);
   noFill();
   popMatrix();
-  // rect(0, 0, width / 2.5, height);
-  //grafo.display();
-  // drawConfigCanvas();
-  // image(configCanvas, 0, 0);
-  //drawGrafoCanvas();
-  // image(grafoCanvas, width/2.5, 0);
 }
 
 void drawGrafoCanvas() {
