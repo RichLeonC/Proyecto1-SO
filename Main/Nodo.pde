@@ -9,28 +9,41 @@ class Nodo extends Thread {
   int lastTime = 0;
   int current;
   int cruzando = 0;
-  
-  void setAlpha(float alpha){
+  private final Object lock = new Object();
+
+  void setAlpha(float alpha) {
     this.alpha = alpha;
   }
-  
-  Nodo(float radio, PVector pos, float alpha, int id){
-      this.id = id;
-      this.radio = radio;
-      this.alpha = alpha;
-      this.pos = pos;
-      this.ocupado =false;
-      this.carrosEspera = new ArrayList();
-      this.aristas = new ArrayList();
-      this.current = millis();
-  
-  }
-  
 
-  public void generarCarro(){
-      int i = 0;
-     // println("Id: " + id + " aristas: " + aristas.size() + "\n");
-      for(Arista a : aristas){
+  Nodo(float radio, PVector pos, float alpha, int id) {
+    this.id = id;
+    this.radio = radio;
+    this.alpha = alpha;
+    this.pos = pos;
+    this.ocupado =false;
+    this.carrosEspera = new ArrayList();
+    this.aristas = new ArrayList();
+    this.current = millis();
+  }
+
+  public void run() {
+
+    current = millis();
+    if (current - lastTime >= (1000/1/alpha)) {
+      lastTime = current;
+      generarCarro();
+    }
+
+    update();
+  }
+
+
+  public void generarCarro() {
+    int i = 0;
+    // println("Id: " + id + " aristas: " + aristas.size() + "\n");
+
+    synchronized(lock) {
+      for (Arista a : aristas) {
         float distanciaEstablecida = a.distancia; // Distancia establecida en kilómetros
         float distanciaReal = pos.dist(grafo.getNodos().get(a.nodoDestinoId).pos); // Distancia real en píxeles
         float segundosAdurar = a.distancia/10;
@@ -38,67 +51,61 @@ class Nodo extends Thread {
         i++;
         grafo.nCarros++;
       }
-      return ;
-    
+    }
   }
-  
-  public void addArista(Arista a){
+
+  public void addArista(Arista a) {
     aristas.add(a);
   }
-  
-  public void siguienteCarro(){
-    if(carrosEspera.size() > 0){
+
+  public void siguienteCarro() {
+    if (carrosEspera.size() > 0) {
       Carro next = carrosEspera.get(0);
       carrosEspera.remove(0);
       cruzando = millis();
       PVector next2 = next.pos.copy();
       next.pos = this.pos.copy();
       int i = 0;
-      for(Carro carro : carrosEspera){
-         PVector next3 = carro.pos.copy(); 
-         carro.avanzar(next2);
-         next2 = next3.copy();
-         i++;
+      for (Carro carro : carrosEspera) {
+        PVector next3 = carro.pos.copy();
+        carro.avanzar(next2);
+        next2 = next3.copy();
+        i++;
       }
       grafo.nCarros--;
-    }else{
+    } else {
       ocupado = false;
     }
   }
-  
-  public boolean ponerEspera(Carro carro){
-      return true;
+
+  public boolean ponerEspera(Carro carro) {
+    return true;
   }
 
-  public void display(){
+  public void display() {
     noStroke();
     fill(0);
-    circle(pos.x,pos.y,radio*2);
+    circle(pos.x, pos.y, radio*2);
     fill(255);
     text(id, pos.x-5, pos.y+5);
-    current = millis();
-    if (current - lastTime >= (1000/1/alpha)) {
-      lastTime = current;
-      generarCarro();      
+  }
+
+  public void update() {
+    synchronized(lock) {
+      if (!ocupado || millis() - cruzando >= 4000) {
+        cruzando = millis();
+        siguienteCarro();
+        ocupado = true;
+      }
     }
   }
-  
-  public void update(){
-    if (!ocupado || millis() - cruzando >= 4000) {
-      cruzando = millis();
-      siguienteCarro();
-      ocupado = true;
-      
-    }
-  }
-  
-  public int getID(){
+
+  public int getID() {
     return id;
   }
-  
 
-  public ArrayList<Arista> getAristas(){
+
+  public ArrayList<Arista> getAristas() {
     return aristas;
   }
-
 }

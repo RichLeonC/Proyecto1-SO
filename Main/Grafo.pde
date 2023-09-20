@@ -1,7 +1,8 @@
 class Grafo {
-  private ArrayList<Nodo> nodos;
+  public ArrayList<Nodo> nodos;
   private ArrayList<Arista> aristas;
   private ArrayList<Carro> carros;
+  private ArrayList<Thread>nodosThreads;
   private static final int INF = Integer.MAX_VALUE;  //valor asignado como distancia que no interesa o interfiere en lo final
   private int radio = 300;
   public int nCarros;
@@ -25,7 +26,9 @@ class Grafo {
       float angulo = TWO_PI / numNodos * i;
       float x = centroX + cos(angulo) * radio;
       float y = centroY + sin(angulo) * radio;
-      nodos.add(new Nodo(constrain(radio/numNodos, 30, 30), new PVector(x, y), 2, i));
+      Nodo nodo = new Nodo(constrain(radio/numNodos, 30, 30), new PVector(x, y), 2, i);
+      nodos.add(nodo);
+      
     }
   }
 
@@ -148,12 +151,16 @@ class Grafo {
       arista.display();
     }
     for (Nodo nodo : nodos) {
-      nodo.update();
+      //nodo.update();
       nodo.display();
+      //Thread nodoT = new Thread(nodo);
+      //nodoT.start();
     }
     for (Carro carro : carros) {
       carro.update();
       carro.display();
+      //Thread carroT = new Thread(carro);
+      //carroT.start();
     }
   }
 

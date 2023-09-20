@@ -45,6 +45,8 @@ long time = 0;
 boolean startTime = false;
 int carsCount = 0;
 
+ArrayList<Thread>carroThreads = new ArrayList();
+
 void setup() {
   size(1920, 1080);
   cp5 = new ControlP5(this);
@@ -233,11 +235,11 @@ void alphasRow(int nodes, int lastPosition, int cellWidth) {
 void statitics() {
   long elapsedTime = 0;
   String finalTime = "00:00:00";
-  if(startTime){
+  if (startTime) {
     elapsedTime = millis() - time;
     finalTime = formatearTiempo(elapsedTime);
   }
-  
+
   pushStyle();
   stroke(#FF5733);
   strokeWeight(3);
@@ -268,15 +270,15 @@ String formatearTiempo(long milisegundos) {
   segundos %= 60;
   minutos %= 60;
   horas %= 24;
-  
+
   // Formatea los componentes de tiempo con al menos dos dígitos
   String horaFormateada = nf(horas, 2);
   String minutosFormateados = nf(minutos, 2);
   String segundosFormateados = nf(segundos, 2);
-  
+
   // Combina los componentes en el formato HH:MM:SS
   String tiempoFormateado = horaFormateada + ":" + minutosFormateados + ":" + segundosFormateados;
-  
+
   return tiempoFormateado;
 }
 
@@ -311,7 +313,7 @@ void startSimulation() {
       if (cellValue != 0) {
         grafo.addArista(table[i][j], i, j);
       }
-     // println("i: "+i+" - j: "+j+" = "+table[i][j]);
+      // println("i: "+i+" - j: "+j+" = "+table[i][j]);
     }
   }
 }
@@ -323,7 +325,23 @@ void draw() {
   pushMatrix();
   translate(offsetX, offsetY);
   scale(zoom);
-  grafo.display();
+  if (startTime) {
+    grafo.display();
+    for (Nodo nodo : grafo.nodos) {
+      Thread nodoT = new Thread(nodo);
+      nodoT.start();
+    }
+
+    //for (Carro carro : grafo.carros) {
+    //  Thread carroT = new Thread(carro);
+    //  carroThreads.add(carroT);
+    //}
+
+    //for (Thread carroThread : carroThreads) {
+    //  carroThread.start();
+    //}
+  }
+
 
   stroke(0);
   strokeWeight(10);
