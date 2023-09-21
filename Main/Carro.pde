@@ -10,6 +10,7 @@ class Carro extends Thread {
   color c;
   PVector objetivo;
   int objetivoId;
+  LinkedList<Nodo> ruta;
   int id;
   boolean esperando = false;
 
@@ -17,16 +18,17 @@ class Carro extends Thread {
     update();
   }
 
-  Carro(float x, float y, float vel, int objetivoId, float radio, int id) {
+  Carro(float x, float y, float vel, float radio, int id, LinkedList<Nodo> rutas) {
+    this.ruta = rutas;
     this.id = id;
     this.velocidad = vel*0.1;
-    this.objetivoId = objetivoId;
+    this.objetivoId = ruta.get(0).id;
     this.acc = new PVector(0, velocidad);
-    PVector v = grafo.getNodos().get(objetivoId).pos;
+    PVector v = ruta.get(0).pos;
     this.objetivo = v.copy();
     this.pos = new PVector(x, y);
-    if (x == grafo.getNodos().get(objetivoId).pos.x) {
-      if (y > grafo.getNodos().get(objetivoId).pos.y) {
+    if (x == ruta.get(0).pos.x) {
+      if (y > ruta.get(0).pos.y) {
         this.objetivo.x-=radio;
         this.pos.x -= radio;
       } else {
@@ -34,8 +36,8 @@ class Carro extends Thread {
         this.pos.x += radio;
       }
     }
-    if (y == grafo.getNodos().get(objetivoId).pos.y) {
-      if (x > grafo.getNodos().get(objetivoId).pos.x) {
+    if (y == ruta.get(0).pos.y) {
+      if (x > ruta.get(0).pos.x) {
         this.objetivo.y+=radio;
         this.pos.y += radio;
       } else {
@@ -43,8 +45,8 @@ class Carro extends Thread {
         this.pos.y -= radio;
       }
     }
-    if (x > grafo.getNodos().get(objetivoId).pos.x) {
-      if (y > grafo.getNodos().get(objetivoId).pos.y) {
+    if (x > ruta.get(0).pos.x) {
+      if (y > ruta.get(0).pos.y) {
         this.objetivo.x+=radio;
         this.pos.x += radio;
       } else {
@@ -52,8 +54,8 @@ class Carro extends Thread {
         this.pos.x -= radio;
       }
     }
-    if (y > grafo.getNodos().get(objetivoId).pos.y) {
-      if (x > grafo.getNodos().get(objetivoId).pos.x) {
+    if (y > ruta.get(0).pos.y) {
+      if (x > ruta.get(0).pos.x) {
         this.objetivo.y-=radio;
         this.pos.y -= radio;
       } else {
@@ -68,12 +70,72 @@ class Carro extends Thread {
     this.direccion.normalize();
   }
 
+  public void setObjetivo(int objetivoId, LinkedList rutas){
+    this.objetivoId = objetivoId;
+    this.ruta = rutas;
+  }
+  
+  public void siguienteNodo(){
+    if(ruta.size() > 1){
+      this.ruta.remove(0);
+      this.objetivoId = this.ruta.get(0).id;
+    }
+    setearNuevaPosicion();
+  }
+  
+  void setearNuevaPosicion(){
+    PVector v = ruta.get(0).pos;
+    this.objetivo = v.copy();
+    float x = pos.x;
+    float y = pos.y;
+    if (x == ruta.get(0).pos.x) {
+      if (y > ruta.get(0).pos.y) {
+        this.objetivo.x-=radio;
+        this.pos.x -= radio;
+      } else {
+        this.objetivo.x+=radio;
+        this.pos.x += radio;
+      }
+    }
+    if (y == ruta.get(0).pos.y) {
+      if (x > ruta.get(0).pos.x) {
+        this.objetivo.y+=radio;
+        this.pos.y += radio;
+      } else {
+        this.objetivo.y-=radio;
+        this.pos.y -= radio;
+      }
+    }
+    if (x > ruta.get(0).pos.x) {
+      if (y > ruta.get(0).pos.y) {
+        this.objetivo.x+=radio;
+        this.pos.x += radio;
+      } else {
+        this.objetivo.x-=radio;
+        this.pos.x -= radio;
+      }
+    }
+    if (y > ruta.get(0).pos.y) {
+      if (x > ruta.get(0).pos.x) {
+        this.objetivo.y-=radio;
+        this.pos.y -= radio;
+      } else {
+        this.objetivo.y+=radio;
+        this.pos.y += radio;
+      }
+    }
+    this.horaSalida = millis();
+    this.direccion = PVector.sub(objetivo, pos);
+    this.direccion.normalize();
+  }
+
   boolean touchAny() {
     float distancia = PVector.dist(objetivo, this.pos);
     if (grafo.getNodos().get(objetivoId).carrosEspera.size() != 0) {
       if ((distancia <= grafo.getNodos().get(objetivoId).radio + this.radio + this.radio*2 * (grafo.getNodos().get(objetivoId).carrosEspera.size()+1)) && !esperando) {
         this.esperando = true;
         // println(millis()-horaSalida);
+        this.velocidad = 0;
         grafo.getNodos().get(objetivoId).carrosEspera.add(this);
         return true;
       }
@@ -81,6 +143,7 @@ class Carro extends Thread {
       if ((distancia <= grafo.getNodos().get(objetivoId).radio + this.radio) && !esperando) {
         this.esperando = true;
         //println(millis()-horaSalida);
+        this.velocidad = 0;
         grafo.getNodos().get(objetivoId).carrosEspera.add(this);
         return true;
       }
@@ -117,7 +180,7 @@ class Carro extends Thread {
     if (distancia <= this.radio*2) {
       // println("Distancia: ", distancia);
       fill(0);
-      // text("Objetivo es nodo " + objetivoId, this.pos.x, this.pos.y);
+      text("Objetivo es nodo " + objetivoId, this.pos.x, this.pos.y);
     }
   }
 }

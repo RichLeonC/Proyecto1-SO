@@ -1,5 +1,6 @@
 import controlP5.*;
 import java.util.Collections;
+import java.util.LinkedList;;
 //COLORES
 //AZUL: #001f3f
 //NARANJA: #FF5733

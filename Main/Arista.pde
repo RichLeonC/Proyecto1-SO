@@ -26,6 +26,7 @@ class Arista {
   }
   
   
+  
   void display(){
     PVector origenPos = grafo.getNodos().get(nodoOrigenId).pos;
     PVector destinoPos = grafo.getNodos().get(nodoDestinoId).pos; 
@@ -39,8 +40,8 @@ class Arista {
     stroke(210,107,219);
     strokeWeight(3);
     line(x1,y1,x2,y2);
-    PVector centro = new PVector(origenPos.x + (destinoPos.x - origenPos.x)*0.5,
-                                  origenPos.y + (destinoPos.y - origenPos.y)*0.5);
+    PVector centro = new PVector(origenPos.x + (destinoPos.x - origenPos.x)*0.8,
+                                  origenPos.y + (destinoPos.y - origenPos.y)*0.8);
     text((int)distancia, centro.x, centro.y);
   }
 
