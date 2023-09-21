@@ -135,7 +135,6 @@ void controlEvent(ControlEvent event) {
     if (event.getName().equals("createTable")) {
       try {
         String nodes1 = nodesField.getText();
-        nodes = Integer.parseInt(nodes1);
         createTable(nodes, nodes);
         tableDone = true;
       }
@@ -165,13 +164,11 @@ void controlEvent(ControlEvent event) {
       time = millis();
       startTime = true;
     }
-    
-    if(event.getName().equals("stoped")){
+
+    if (event.getName().equals("stoped")) {
       stopSimulation();
       time = 0;
       startTime = false;
-      
-    
     }
   }
 }
@@ -294,7 +291,7 @@ void startSimulation() {
   float cellValue;
   String alphaCell;
   float alphaValue;
-  
+
   grafo.generarNodos(nodes);
   alphas = new float[nodes];
   table = new float[nodes][nodes];
@@ -326,17 +323,16 @@ void startSimulation() {
   }
 }
 
-void stopSimulation(){
-  for(Thread nodoT:grafo.nodosThreads){
-    try{
-     nodoT.join();
-    }catch(InterruptedException error){
+void stopSimulation() {
+  for (Thread nodoT : grafo.nodosThreads) {
+    try {
+      nodoT.join();
+    }
+    catch(InterruptedException error) {
       print(error);
     }
-   
-  
   }
-  
+
   grafo.clearAll();
 }
 
