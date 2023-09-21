@@ -42,7 +42,7 @@ class Grafo {
     carros.add(new Carro(x, y, velocidad, objetivoId, radio*4, id));
   }
 
-  public  ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino) {
+/*  public  ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino) {
     HashMap<Integer, Integer> distancias = new HashMap<>();
     HashMap<Nodo, Nodo> padres = new HashMap<>();
     ArrayList<Nodo> visitados = new ArrayList();
@@ -122,6 +122,61 @@ class Grafo {
     return Integer.MAX_VALUE;
   }
 
+*/
+
+public ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino) {
+    HashMap<Integer, Integer> distancias = new HashMap<>();
+    HashMap<Integer, Integer> padres = new HashMap<>();
+    ArrayList<Nodo> visitados = new ArrayList<>();
+    ArrayList<Nodo> recorrido = new ArrayList<>();
+     ArrayList<Nodo> recorridoseguro = new ArrayList<>();
+
+    for (Nodo nodo : grafo) {
+        distancias.put(nodo.getID(), Integer.MAX_VALUE);
+    }
+
+    distancias.put(inicio.getID(), 0);
+
+    while (!visitados.contains(destino)) {
+        Nodo actual = null;
+        int minDistancia = Integer.MAX_VALUE;
+
+        // Encuentra el nodo con la distancia mínima no visitado
+        for (Nodo nodo : grafo) {
+            if (!visitados.contains(nodo) && distancias.get(nodo.getID()) < minDistancia) {
+                actual = nodo;
+                minDistancia = distancias.get(nodo.getID());
+            }
+        }
+
+        if (actual == null) {
+            break;
+        }
+
+        visitados.add(actual);
+
+        for (Arista arista : actual.getAristas()) {
+            if (!visitados.contains(grafo.get(arista.nodoDestinoId))) {
+                float distanciaTentativa = distancias.get(actual.getID()) + arista.distancia;
+                if (distanciaTentativa < distancias.get(arista.nodoDestinoId)) {
+                    distancias.put(arista.nodoDestinoId, (int) distanciaTentativa);
+                    padres.put(arista.nodoDestinoId, actual.getID());
+                }
+            }
+        }
+    }
+
+    // Construye el recorrido desde el destino hacia el inicio
+    int nodoActualID = destino.getID();
+    while (nodoActualID != inicio.getID()) {
+        recorrido.add(grafo.get(nodoActualID));
+        nodoActualID = padres.get(nodoActualID);
+    }
+    recorrido.add(inicio);
+    Collections.reverse(recorrido); // Invierte el recorrido para que vaya desde el inicio al destino
+
+    return recorrido;
+}
 
   public void borrarCarros() {
     carros.clear();
