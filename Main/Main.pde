@@ -63,6 +63,18 @@ void setup() {
 }
 
 void panelConfigUI() {
+  int xCreateTable = 200;
+  int yCreateTable = 20;
+  int widthCreateTable = 120;
+  int heightCreateTable = 30;
+
+  if (width!=1920 && height!=1080) {
+    xCreateTable = 300;
+    yCreateTable = 30;
+    widthCreateTable = 170;
+    heightCreateTable = 45;
+  }
+
   nodesField = cp5.addTextfield("NODOS")
     .setPosition(20, 20)
     .setText("0")
@@ -88,8 +100,8 @@ void panelConfigUI() {
   btnDecrement.getCaptionLabel().setSize(14);
 
   Button btnCreateTable = cp5.addButton("createTable")
-    .setPosition(width*200/1920, height *20/1080)
-    .setSize(width *120/1920, height*30/1080)
+    .setPosition(width*xCreateTable/1920, height *yCreateTable/1080)
+    .setSize(width *widthCreateTable/1920, height*heightCreateTable/1080)
     .setColorBackground(#FF5733)
     .setFont(fontBTN)
     .setCaptionLabel("Crear tabla");
@@ -244,7 +256,7 @@ void statitics() {
   stroke(#FF5733);
   strokeWeight(3);
   fill(#001f3f);
-  rect(width*1500/1920, height*10/1080, 400, 250);
+  rect(width*1450/1920, height*10/1080, width*450/1920, height*250/1080);
   fill(255);
 
 
@@ -252,11 +264,11 @@ void statitics() {
   // textSize(16);
   textFont(fontBTN);
   textAlign(LEFT, TOP);
-  text("Estadísticas", width*1650/1920, 30);
+  text("Estadísticas", width*1600/1920, height*30/1080);
   textAlign(LEFT);
-  text("Tiempo de simulación: "+finalTime, width*1510/1920, height*120/1080);
-  text("Cantidad de vehiculos: "+grafo.nCarros, width*1510/1920, height*180/1080);
-  text("Velocidad promedio: ", width*1510/1920, height*240/1080);
+  text("Tiempo de simulación: "+finalTime, width*1460/1920, height*120/1080);
+  text("Cantidad de vehiculos: "+grafo.nCarros, width*1460/1920, height*180/1080);
+  text("Velocidad promedio: ", width*1460/1920, height*240/1080);
 
 
   //text("SimultTime:")
