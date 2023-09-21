@@ -165,13 +165,11 @@ void controlEvent(ControlEvent event) {
       time = millis();
       startTime = true;
     }
-    
-    if(event.getName().equals("stoped")){
+
+    if (event.getName().equals("stoped")) {
       stopSimulation();
       time = 0;
       startTime = false;
-      
-    
     }
   }
 }
@@ -242,10 +240,19 @@ void alphasRow(int nodes, int lastPosition, int cellWidth) {
 void statitics() {
   long elapsedTime = 0;
   String finalTime = "00:00:00";
+  int carrosActivos = 0;
+  int promedio = 0;
   if (startTime) {
     elapsedTime = millis() - time;
     finalTime = formatearTiempo(elapsedTime);
+    if (grafo.nCarros>0) {
+      carrosActivos = grafo.nCarros - grafo.nCarrosEspera;
+      promedio = 10*carrosActivos/grafo.nCarros;
+    }
   }
+
+  
+  String promedioStr = " "+promedio+" km/s";
 
   pushStyle();
   stroke(#FF5733);
@@ -263,7 +270,7 @@ void statitics() {
   textAlign(LEFT);
   text("Tiempo de simulación: "+finalTime, width*1460/1920, height*120/1080);
   text("Cantidad de vehiculos: "+grafo.nCarros, width*1460/1920, height*180/1080);
-  text("Velocidad promedio: ", width*1460/1920, height*240/1080);
+  text("Velocidad promedio: "+promedioStr, width*1460/1920, height*240/1080);
 
 
   //text("SimultTime:")
@@ -294,7 +301,7 @@ void startSimulation() {
   float cellValue;
   String alphaCell;
   float alphaValue;
-  
+
   grafo.generarNodos(nodes);
   alphas = new float[nodes];
   table = new float[nodes][nodes];
@@ -326,17 +333,16 @@ void startSimulation() {
   }
 }
 
-void stopSimulation(){
-  for(Thread nodoT:grafo.nodosThreads){
-    try{
-     nodoT.join();
-    }catch(InterruptedException error){
+void stopSimulation() {
+  for (Thread nodoT : grafo.nodosThreads) {
+    try {
+      nodoT.join();
+    }
+    catch(InterruptedException error) {
       print(error);
     }
-   
-  
   }
-  
+
   grafo.clearAll();
 }
 

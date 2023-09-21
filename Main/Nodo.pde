@@ -62,6 +62,7 @@ class Nodo extends Thread {
     if (carrosEspera.size() > 0) {
       Carro next = carrosEspera.get(0);
       carrosEspera.remove(0);
+      grafo.nCarrosEspera++;
       cruzando = millis();
       PVector next2 = next.pos.copy();
       next.pos = this.pos.copy();
