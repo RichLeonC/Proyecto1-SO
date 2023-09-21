@@ -42,7 +42,7 @@ class Nodo extends Thread {
     int i = 0;
     // println("Id: " + id + " aristas: " + aristas.size() + "\n");
 
-    synchronized(lock) {
+    synchronized(grafo) {
       for (Arista a : aristas) {
         float distanciaEstablecida = a.distancia; // Distancia establecida en kilómetros
         float distanciaReal = pos.dist(grafo.getNodos().get(a.nodoDestinoId).pos); // Distancia real en píxeles

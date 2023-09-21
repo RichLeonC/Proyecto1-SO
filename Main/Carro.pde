@@ -108,8 +108,8 @@ class Carro extends Thread {
   }
 
   void display() {
-    noStroke();
-    //stroke(153,246,214);
+    //noStroke();
+    stroke(153,246,214);
     fill(red(c), blue(c), green(c));
     circle(pos.x, pos.y, radio*2);
     PVector v = new PVector(mouseX, mouseY);
