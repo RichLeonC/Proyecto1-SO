@@ -1,11 +1,11 @@
 class Nodo extends Thread {
-  private int id;
-  private float radio;
-  private PVector pos;
-  private float alpha;
-  private boolean ocupado;
-  private ArrayList<Carro> carrosEspera;
-  private ArrayList<Arista> aristas;
+  int id;
+  float radio;
+  PVector pos;
+  float alpha;
+  boolean ocupado;
+  ArrayList<Carro> carrosEspera;
+  ArrayList<Arista> aristas;
   int lastTime = 0;
   int current;
   int cruzando = 0;
@@ -39,18 +39,36 @@ class Nodo extends Thread {
 
 
   public void generarCarro() {
-    int i = 0;
     // println("Id: " + id + " aristas: " + aristas.size() + "\n");
 
     synchronized(grafo) {
-      for (Arista a : aristas) {
+      //for (Arista a : aristas) {
+        Arista a = aristas.get((int) random(0,aristas.size()));
         float distanciaEstablecida = a.distancia; // Distancia establecida en kilómetros
         float distanciaReal = pos.dist(grafo.getNodos().get(a.nodoDestinoId).pos); // Distancia real en píxeles
         float segundosAdurar = a.distancia/10;
-        grafo.addCarro(pos.x, pos.y, distanciaReal / segundosAdurar / 6.5, a.nodoDestinoId, radio/10, grafo.nCarros);
-        i++;
-        grafo.nCarros++;
-      }
+        if(grafo.nodos.size() > 0){
+          LinkedList<Nodo> aux = new LinkedList<Nodo>(grafo.nodos);
+          aux.remove(this.id);
+          /*for(Nodo n : aux){
+            if(!grafo.existeCaminoEntreNodos(this.id, n.id)){
+              aux.remove(n.id);
+            }
+          }*/
+          if(aux.size() > 0){
+            Nodo objetivo = grafo.nodos.get(aux.get((int)random(0,aux.size())).id);
+            LinkedList<Nodo> ruta = grafo.dijkstra(this, objetivo);
+            /*print("\nDel nodo " + this.id + " quiere ir al nodo " + objetivo.id + "Y la ruta es ");
+            for(Nodo n : ruta){
+              print(n.id);
+            }
+            print("\n");*/
+            ruta.remove(0);
+            grafo.addCarro(pos.x, pos.y, distanciaReal / segundosAdurar / 6.5, a.nodoDestinoId, radio/10, grafo.nCarros, ruta);
+            grafo.nCarros++;
+          }
+        }
+      //}
     }
   }
 
@@ -62,6 +80,7 @@ class Nodo extends Thread {
     if (carrosEspera.size() > 0) {
       Carro next = carrosEspera.get(0);
       carrosEspera.remove(0);
+      next.siguienteNodo();
       cruzando = millis();
       PVector next2 = next.pos.copy();
       next.pos = this.pos.copy();
@@ -91,8 +110,8 @@ class Nodo extends Thread {
   }
 
   public void update() {
-    synchronized(lock) {
-      if (!ocupado || millis() - cruzando >= 4000) {
+    synchronized(this) {
+      if (!ocupado || millis() - cruzando >= 2000) {
         cruzando = millis();
         siguienteCarro();
         ocupado = true;

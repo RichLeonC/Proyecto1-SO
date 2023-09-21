@@ -28,8 +28,7 @@ class Grafo {
       float x = centroX + cos(angulo) * radio;
       float y = centroY + sin(angulo) * radio;
       Nodo nodo = new Nodo(constrain(radio/numNodos, 30, 30), new PVector(x, y), 2, i);
-      nodos.add(nodo);
-      
+      nodos.add(nodo);      
     }
   }
 
@@ -39,8 +38,8 @@ class Grafo {
     aristas.add(a);
   }
 
-  public void addCarro(float x, float y, float velocidad, int objetivoId, float radio, int id) {
-    carros.add(new Carro(x, y, velocidad, objetivoId, radio*4, id));
+  public void addCarro(float x, float y, float velocidad, int objetivoId, float radio, int id, LinkedList<Nodo> ruta ) {
+    carros.add(new Carro(x, y, velocidad, radio*4, id, ruta));
   }
 
 /*  public  ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino) {
@@ -125,14 +124,46 @@ class Grafo {
 
 */
 
-public ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino) {
+boolean existeCaminoEntreNodos(int nodoInicio, int nodoFin) {
+  // Crear un arreglo de booleanos para llevar un registro de los nodos visitados
+  boolean[] visitados = new boolean[nodos.size()];
+  
+
+  // Llamar a la función de búsqueda en profundidad
+  return dfs(nodoInicio, nodoFin, visitados);
+}
+
+boolean dfs(int nodoActual, int nodoFin, boolean[] visitados) {
+  // Marcar el nodo actual como visitado
+  visitados[nodoActual - 1] = true;
+
+  // Si hemos llegado al nodo de destino, se ha encontrado un camino
+  if (nodoActual == nodoFin) {
+    return true;
+  }
+
+  // Recorrer las aristas para encontrar un nodo vecino no visitado
+  for (Arista arista : aristas) {
+    //if (arista.nodoOrigenId == nodoActual && !visitados[arista.nodoDestinoId - 1]) {
+      // Llamada recursiva para explorar el nodo vecino
+      if (dfs(arista.nodoDestinoId, nodoFin, visitados)) {
+        return true;
+      }
+    //}
+  }
+
+  // Si no se encontró un camino, retornar false
+  return false;
+}
+
+public LinkedList<Nodo> dijkstra(Nodo inicio, Nodo destino) {
     HashMap<Integer, Integer> distancias = new HashMap<>();
     HashMap<Integer, Integer> padres = new HashMap<>();
     ArrayList<Nodo> visitados = new ArrayList<>();
-    ArrayList<Nodo> recorrido = new ArrayList<>();
+    LinkedList<Nodo> recorrido = new LinkedList<>();
      ArrayList<Nodo> recorridoseguro = new ArrayList<>();
 
-    for (Nodo nodo : grafo) {
+    for (Nodo nodo : nodos) {
         distancias.put(nodo.getID(), Integer.MAX_VALUE);
     }
 
@@ -143,7 +174,7 @@ public ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino
         int minDistancia = Integer.MAX_VALUE;
 
         // Encuentra el nodo con la distancia mínima no visitado
-        for (Nodo nodo : grafo) {
+        for (Nodo nodo : nodos) {
             if (!visitados.contains(nodo) && distancias.get(nodo.getID()) < minDistancia) {
                 actual = nodo;
                 minDistancia = distancias.get(nodo.getID());
@@ -157,7 +188,7 @@ public ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino
         visitados.add(actual);
 
         for (Arista arista : actual.getAristas()) {
-            if (!visitados.contains(grafo.get(arista.nodoDestinoId))) {
+            if (!visitados.contains(nodos.get(arista.nodoDestinoId))) {
                 float distanciaTentativa = distancias.get(actual.getID()) + arista.distancia;
                 if (distanciaTentativa < distancias.get(arista.nodoDestinoId)) {
                     distancias.put(arista.nodoDestinoId, (int) distanciaTentativa);
@@ -170,7 +201,7 @@ public ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino
     // Construye el recorrido desde el destino hacia el inicio
     int nodoActualID = destino.getID();
     while (nodoActualID != inicio.getID()) {
-        recorrido.add(grafo.get(nodoActualID));
+        recorrido.add(nodos.get(nodoActualID));
         nodoActualID = padres.get(nodoActualID);
     }
     recorrido.add(inicio);
