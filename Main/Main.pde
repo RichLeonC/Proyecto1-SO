@@ -48,16 +48,12 @@ int carsCount = 0;
 ArrayList<Thread>carroThreads = new ArrayList();
 
 void setup() {
-  size(1920, 1080);
+  size(1280, 720);
   cp5 = new ControlP5(this);
 
   tableDone = false;
   font = createFont("Arial", 16);
   fontBTN = createFont("Arial Black", 16);
-
-  configCanvas = createGraphics(width * 1/2, height);
-  // configCanvas.background(#001f3f);
-  grafoCanvas = createGraphics(width * 3/4, height);
 
   panelConfigUI();
 }
@@ -108,6 +104,7 @@ void panelConfigUI() {
 
   btnCreateTable.getCaptionLabel().setSize(14);
 
+
   Button btnStart = cp5.addButton("start")
     .setPosition(width * 400/1920, height*950/1080)
     .setSize(width*150/1920, height*60/1080)
@@ -120,14 +117,14 @@ void panelConfigUI() {
   //if(!tableDone) btnStart.setLock(true);
   //else btnStart.setLock(false);
 
-  Button btnStop = cp5.addButton("stop")
+  Button btnStoped = cp5.addButton("stoped")
     .setPosition(width * 600/1920, height*950/1080)
     .setSize(width*150/1920, height*60/1080)
     .setColorBackground(#FF5733)
     .setFont(fontBTN)
     .setCaptionLabel("Detener");
 
-  btnStop.getCaptionLabel().setSize(16);
+  btnStoped.getCaptionLabel().setSize(16);
 }
 
 
@@ -135,21 +132,11 @@ void panelConfigUI() {
 
 void controlEvent(ControlEvent event) {
   if (event.isController()) {
-    for (int i = 0; i < nodes; i++) {
-      for (int j = 0; j < nodes; j++) {
-        String textFieldName = i + "." + j;
-        if (event.getName().equals(textFieldName)) {
-          String texto = event.getStringValue();
-          println("Texto en " + textFieldName + ": " + texto);
-        }
-      }
-    }
     if (event.getName().equals("createTable")) {
       try {
         String nodes1 = nodesField.getText();
         nodes = Integer.parseInt(nodes1);
         createTable(nodes, nodes);
-        grafo.generarNodos(nodes);
         tableDone = true;
       }
       catch(Error error) {
@@ -177,6 +164,14 @@ void controlEvent(ControlEvent event) {
       startSimulation();
       time = millis();
       startTime = true;
+    }
+    
+    if(event.getName().equals("stoped")){
+      stopSimulation();
+      time = 0;
+      startTime = false;
+      
+    
     }
   }
 }
@@ -299,7 +294,8 @@ void startSimulation() {
   float cellValue;
   String alphaCell;
   float alphaValue;
-
+  
+  grafo.generarNodos(nodes);
   alphas = new float[nodes];
   table = new float[nodes][nodes];
   for (int i = 0; i<nodes; i++) {
@@ -330,6 +326,20 @@ void startSimulation() {
   }
 }
 
+void stopSimulation(){
+  for(Thread nodoT:grafo.nodosThreads){
+    try{
+     nodoT.join();
+    }catch(InterruptedException error){
+      print(error);
+    }
+   
+  
+  }
+  
+  grafo.clearAll();
+}
+
 void draw() {
 
   background(180, 180, 180);
@@ -341,6 +351,7 @@ void draw() {
     grafo.display();
     for (Nodo nodo : grafo.nodos) {
       Thread nodoT = new Thread(nodo);
+      grafo.nodosThreads.add(nodoT);
       nodoT.start();
     }
 
@@ -361,22 +372,6 @@ void draw() {
   popMatrix();
 }
 
-void drawGrafoCanvas() {
-  grafoCanvas.beginDraw();
-  grafoCanvas.background(#001f3f);
-  // LOS DIBUJOS DE LOS NODOS,ARISTAS, CARROS IRAN ACA
-
-  grafoCanvas.endDraw();
-}
-
-void drawConfigCanvas() {
-  configCanvas.beginDraw();
-  configCanvas.background(150);
-
-
-
-  configCanvas.endDraw();
-}
 
 void mouseDragged() {
   float deltaX = mouseX - pmouseX;

@@ -2,7 +2,7 @@ class Grafo {
   public ArrayList<Nodo> nodos;
   private ArrayList<Arista> aristas;
   private ArrayList<Carro> carros;
-  private ArrayList<Thread>nodosThreads;
+  public ArrayList<Thread>nodosThreads;
   private static final int INF = Integer.MAX_VALUE;  //valor asignado como distancia que no interesa o interfiere en lo final
   private int radio = 300;
   public int nCarros;
@@ -11,6 +11,7 @@ class Grafo {
     this.nodos = new ArrayList();
     this.aristas = new ArrayList();
     this.carros = new ArrayList();
+    this.nodosThreads = new ArrayList();
   }
 
   /*public void addNodo(float radio,PVector pos,float alpha){
@@ -197,6 +198,14 @@ public ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino
 
   public ArrayList<Nodo> getNodos() {
     return nodos;
+  }
+  
+  public void clearAll(){
+    nodos.clear();
+    aristas.clear();
+    carros.clear();
+    nodosThreads.clear();
+    nCarros = 0;
   }
 
 
