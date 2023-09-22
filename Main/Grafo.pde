@@ -207,6 +207,7 @@ public ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino
     carros.clear();
     nodosThreads.clear();
     nCarros = 0;
+    nCarrosEspera = 0;
   }
 
 

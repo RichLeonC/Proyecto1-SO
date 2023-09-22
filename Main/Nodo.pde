@@ -62,7 +62,7 @@ class Nodo extends Thread {
     if (carrosEspera.size() > 0) {
       Carro next = carrosEspera.get(0);
       carrosEspera.remove(0);
-      grafo.nCarrosEspera++;
+      grafo.nCarrosEspera--;
       cruzando = millis();
       PVector next2 = next.pos.copy();
       next.pos = this.pos.copy();
@@ -70,6 +70,7 @@ class Nodo extends Thread {
       for (Carro carro : carrosEspera) {
         PVector next3 = carro.pos.copy();
         carro.avanzar(next2);
+
         next2 = next3.copy();
         i++;
       }

@@ -246,6 +246,8 @@ void statitics() {
     elapsedTime = millis() - time;
     finalTime = formatearTiempo(elapsedTime);
     if (grafo.nCarros>0) {
+      //println("nCarros: "+grafo.nCarros);
+      //println("Espera: "+grafo.nCarrosEspera);
       carrosActivos = grafo.nCarros - grafo.nCarrosEspera;
       promedio = 10*carrosActivos/grafo.nCarros;
     }
