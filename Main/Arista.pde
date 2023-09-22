@@ -2,19 +2,22 @@ class Arista {
   float distancia;
   int nodoOrigenId;
   int nodoDestinoId;
+  int id;
   color c;
   
-  Arista(float distancia, int origen, int destino, color c){
+  Arista(float distancia, int origen, int destino, color c, int id){
     this.distancia = distancia;
     this.nodoOrigenId = origen;
     this.nodoDestinoId = destino;
     this.c = c;
+    this.id = id;
   }
   
-  Arista(float distancia, int origen, int destino){
+  Arista(float distancia, int origen, int destino, int id){
     this.nodoOrigenId = origen;
     this.nodoDestinoId = destino;
     this.distancia = distancia;
+    this.id = id;
   }
   
   void setDistancia(float distancia){
