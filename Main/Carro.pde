@@ -13,14 +13,19 @@ class Carro extends Thread {
   LinkedList<Nodo> ruta;
   int id;
   boolean esperando = false;
-
+  int objFinal;
+  boolean cruzando = false;
+  float tiempo;
+  int aristaId;
   public void run() {
     update();
   }
 
-  Carro(float x, float y, float vel, float radio, int id, LinkedList<Nodo> rutas) {
+  Carro(float x, float y, float vel, float radio, int id, LinkedList<Nodo> rutas, int aristaId) {
     this.ruta = rutas;
+    this.aristaId = aristaId;
     this.id = id;
+    this.objFinal = ruta.getLast().id;
     this.velocidad = vel*0.1;
     this.objetivoId = ruta.get(0).id;
     this.acc = new PVector(0, velocidad);
@@ -75,11 +80,20 @@ class Carro extends Thread {
     this.ruta = rutas;
   }
   
+  public void cruzar(){
+    this.cruzando = true;
+    tiempo = millis();
+  }
+  
   public void siguienteNodo(){
     if(ruta.size() > 1){
       this.ruta.remove(0);
       this.objetivoId = this.ruta.get(0).id;
+    }else {
+      grafo.carros.remove(grafo.getCarroIndex(this.id));
     }
+    this.esperando = false;
+    this.cruzando = false;
     setearNuevaPosicion();
   }
   
@@ -135,7 +149,6 @@ class Carro extends Thread {
       if ((distancia <= grafo.getNodos().get(objetivoId).radio + this.radio + this.radio*2 * (grafo.getNodos().get(objetivoId).carrosEspera.size()+1)) && !esperando) {
         this.esperando = true;
         // println(millis()-horaSalida);
-        this.velocidad = 0;
         grafo.getNodos().get(objetivoId).carrosEspera.add(this);
         grafo.nCarrosEspera++;
         return true;
@@ -144,7 +157,6 @@ class Carro extends Thread {
       if ((distancia <= grafo.getNodos().get(objetivoId).radio + this.radio) && !esperando) {
         this.esperando = true;
         //println(millis()-horaSalida);
-        this.velocidad = 0;
         grafo.getNodos().get(objetivoId).carrosEspera.add(this);
        grafo.nCarrosEspera++;
 
@@ -182,7 +194,7 @@ class Carro extends Thread {
     if (distancia <= this.radio*2) {
       // println("Distancia: ", distancia);
       fill(0);
-      text("Objetivo es nodo " + objetivoId, this.pos.x, this.pos.y);
+      text("Objetivo: " + objFinal, this.pos.x, this.pos.y);
     }
   }
 }

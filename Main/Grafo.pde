@@ -7,6 +7,8 @@ class Grafo {
   private int radio = 300;
   public int nCarros;
   public int nCarrosEspera = 0;
+  public int idsCounter = 0;
+  public int idsAristasCounter = 0;
 
   Grafo() {
     this.nodos = new ArrayList();
@@ -34,13 +36,33 @@ class Grafo {
   }
 
   public void addArista(float distancia, int nOrigen, int nDestino) {
-    Arista a = new Arista(distancia, nOrigen, nDestino);
+    Arista a = new Arista(distancia, nOrigen, nDestino,idsAristasCounter);
+    idsAristasCounter++;
     nodos.get(nOrigen).addArista(a);
     aristas.add(a);
   }
 
-  public void addCarro(float x, float y, float velocidad, int objetivoId, float radio, int id, LinkedList<Nodo> ruta ) {
-    carros.add(new Carro(x, y, velocidad, radio*4, id, ruta));
+  public void addCarro(float x, float y, float velocidad, int objetivoId, float radio, int id, LinkedList<Nodo> ruta, int arista ) {
+    carros.add(new Carro(x, y, velocidad, radio*4, idsCounter, ruta, arista));
+    idsCounter++;
+  }
+  
+  public Carro getCarro(int id){
+    for(Carro c : carros){
+      if(c.id == id){
+        return c;
+      }
+    }
+    return null;
+  }
+  
+  public int getCarroIndex(int id){
+    for(int i = 0; i < carros.size(); i++){
+      if(carros.get(i).id == id){
+        return i;
+      }
+    }
+    return -1;
   }
 
 /*  public  ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino) {
@@ -125,37 +147,6 @@ class Grafo {
 
 */
 
-boolean existeCaminoEntreNodos(int nodoInicio, int nodoFin) {
-  // Crear un arreglo de booleanos para llevar un registro de los nodos visitados
-  boolean[] visitados = new boolean[nodos.size()];
-  
-
-  // Llamar a la función de búsqueda en profundidad
-  return dfs(nodoInicio, nodoFin, visitados);
-}
-
-boolean dfs(int nodoActual, int nodoFin, boolean[] visitados) {
-  // Marcar el nodo actual como visitado
-  visitados[nodoActual - 1] = true;
-
-  // Si hemos llegado al nodo de destino, se ha encontrado un camino
-  if (nodoActual == nodoFin) {
-    return true;
-  }
-
-  // Recorrer las aristas para encontrar un nodo vecino no visitado
-  for (Arista arista : aristas) {
-    //if (arista.nodoOrigenId == nodoActual && !visitados[arista.nodoDestinoId - 1]) {
-      // Llamada recursiva para explorar el nodo vecino
-      if (dfs(arista.nodoDestinoId, nodoFin, visitados)) {
-        return true;
-      }
-    //}
-  }
-
-  // Si no se encontró un camino, retornar false
-  return false;
-}
 
 public LinkedList<Nodo> dijkstra(Nodo inicio, Nodo destino) {
     HashMap<Integer, Integer> distancias = new HashMap<>();
