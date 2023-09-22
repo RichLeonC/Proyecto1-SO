@@ -136,6 +136,7 @@ void controlEvent(ControlEvent event) {
     if (event.getName().equals("createTable")) {
       try {
         String nodes1 = nodesField.getText();
+        nodes = Integer.parseInt(nodes1);
         createTable(nodes, nodes);
         tableDone = true;
       }
