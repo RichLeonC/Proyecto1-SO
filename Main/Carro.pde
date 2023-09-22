@@ -91,6 +91,7 @@ class Carro extends Thread {
       this.objetivoId = this.ruta.get(0).id;
     }else {
       grafo.carros.remove(grafo.getCarroIndex(this.id));
+      grafo.nCarros--;
     }
     this.esperando = false;
     this.cruzando = false;
