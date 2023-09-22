@@ -137,6 +137,7 @@ class Carro extends Thread {
         // println(millis()-horaSalida);
         this.velocidad = 0;
         grafo.getNodos().get(objetivoId).carrosEspera.add(this);
+        grafo.nCarrosEspera++;
         return true;
       }
     } else {
@@ -145,6 +146,8 @@ class Carro extends Thread {
         //println(millis()-horaSalida);
         this.velocidad = 0;
         grafo.getNodos().get(objetivoId).carrosEspera.add(this);
+       grafo.nCarrosEspera++;
+
         return true;
       }
     }
@@ -167,12 +170,11 @@ class Carro extends Thread {
 
   void avanzar(PVector v) {
     pos = v.copy();
-    
   }
 
   void display() {
     //noStroke();
-    stroke(153,246,214);
+    stroke(153, 246, 214);
     fill(red(c), blue(c), green(c));
     circle(pos.x, pos.y, radio*2);
     PVector v = new PVector(mouseX, mouseY);

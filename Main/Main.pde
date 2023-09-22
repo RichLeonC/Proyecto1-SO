@@ -240,10 +240,21 @@ void alphasRow(int nodes, int lastPosition, int cellWidth) {
 void statitics() {
   long elapsedTime = 0;
   String finalTime = "00:00:00";
+  int carrosActivos = 0;
+  int promedio = 0;
   if (startTime) {
     elapsedTime = millis() - time;
     finalTime = formatearTiempo(elapsedTime);
+    if (grafo.nCarros>0) {
+      //println("nCarros: "+grafo.nCarros);
+      //println("Espera: "+grafo.nCarrosEspera);
+      carrosActivos = grafo.nCarros - grafo.nCarrosEspera;
+      promedio = 10*carrosActivos/grafo.nCarros;
+    }
   }
+
+  
+  String promedioStr = " "+promedio+" km/s";
 
   pushStyle();
   stroke(#FF5733);
@@ -261,7 +272,7 @@ void statitics() {
   textAlign(LEFT);
   text("Tiempo de simulación: "+finalTime, width*1460/1920, height*120/1080);
   text("Cantidad de vehiculos: "+grafo.nCarros, width*1460/1920, height*180/1080);
-  text("Velocidad promedio: ", width*1460/1920, height*240/1080);
+  text("Velocidad promedio: "+promedioStr, width*1460/1920, height*240/1080);
 
 
   //text("SimultTime:")

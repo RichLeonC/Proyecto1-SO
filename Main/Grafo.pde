@@ -6,6 +6,7 @@ class Grafo {
   private static final int INF = Integer.MAX_VALUE;  //valor asignado como distancia que no interesa o interfiere en lo final
   private int radio = 300;
   public int nCarros;
+  public int nCarrosEspera = 0;
 
   Grafo() {
     this.nodos = new ArrayList();
@@ -237,6 +238,7 @@ public LinkedList<Nodo> dijkstra(Nodo inicio, Nodo destino) {
     carros.clear();
     nodosThreads.clear();
     nCarros = 0;
+    nCarrosEspera = 0;
   }
 
 
