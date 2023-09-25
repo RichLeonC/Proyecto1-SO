@@ -39,31 +39,33 @@ class Nodo extends Thread {
 
 
   public void generarCarro() {
-    // println("Id: " + id + " aristas: " + aristas.size() + "\n");
-
-    synchronized(grafo) {
-      //for (Arista a : aristas) {
-
-      if (grafo.nodos.size() > 0) {
-        LinkedList<Nodo> aux = new LinkedList<Nodo>(grafo.nodos);
-        aux.remove(this.id);
-        if (aux.size() > 0) {
-          Nodo objetivo = grafo.nodos.get(aux.get((int)random(0, aux.size())).id);
-          LinkedList<Nodo> ruta = grafo.dijkstra(this, objetivo);
-          ruta.remove(0);
-          while (ruta.size() == 0) {
-            ruta = grafo.dijkstra(this, objetivo);
-            ruta.remove(0);
-          }
-          Arista a = getArista(this.id, ruta.get(0).id);
-          float distanciaEstablecida = a.distancia; // Distancia establecida en kilómetros
-          float distanciaReal = pos.dist(grafo.getNodos().get(a.nodoDestinoId).pos); // Distancia real en píxeles
-          float segundosAdurar = a.distancia/10;
-          grafo.addCarro(pos.x, pos.y, distanciaReal / segundosAdurar / 6.5, a.nodoDestinoId, radio/10, grafo.nCarros, ruta, a.id);
-          grafo.nCarros++;
-        }
+    LinkedList<Nodo> ruta;
+    LinkedList<Nodo> aux = new LinkedList<Nodo>(grafo.nodos);
+    aux.remove(this.id);
+    Collections.shuffle(aux);
+    do{
+      Nodo objetivo = aux.pop();
+      ruta = grafo.dijkstra(this, objetivo);
+    }while(ruta.size() <= 1 && aux.size() > 0);
+    if(ruta.size() > 1){
+      ruta.remove(0);
+      Arista a = getArista(this.id, ruta.get(0).id);
+      float distanciaReal = pos.dist(grafo.getNodos().get(a.nodoDestinoId).pos); // Distancia real en píxeles
+      float segundosAdurar = a.distancia/10;
+      synchronized(grafo) {
+        grafo.addCarro(pos.x, pos.y, distanciaReal / segundosAdurar / 6.5, a.nodoDestinoId, radio/10, grafo.nCarros, ruta, a.id);
+        grafo.nCarros++;
       }
     }
+  }
+  
+  public boolean tieneArista(int origen){
+    for (Arista a : aristas) {
+      if (a.nodoOrigenId == origen) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public Arista getArista(int origen, int destino) {

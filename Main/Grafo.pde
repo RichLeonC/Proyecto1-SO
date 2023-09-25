@@ -17,11 +17,6 @@ class Grafo {
     this.nodosThreads = new ArrayList();
   }
 
-  /*public void addNodo(float radio,PVector pos,float alpha){
-   nodos.add(new Nodo(radio,pos,alpha));
-   
-   }*/
-
   public void generarNodos(float numNodos) {
     int centroX = width * 1320 / 1920;
     int centroY = height/2;
@@ -64,89 +59,6 @@ class Grafo {
     }
     return -1;
   }
-
-/*  public  ArrayList<Nodo> dijkstra(ArrayList<Nodo> grafo, Nodo inicio, Nodo destino) {
-    HashMap<Integer, Integer> distancias = new HashMap<>();
-    HashMap<Nodo, Nodo> padres = new HashMap<>();
-    ArrayList<Nodo> visitados = new ArrayList();
-    ArrayList<Nodo> recorrido = new ArrayList();
-
-
-    for (Nodo nodo : grafo) {
-      distancias.put(nodo.getID(), Integer.MAX_VALUE);
-    }
-
-    distancias.put(inicio.getID(), 0);
-    Nodo actual = inicio;
-
-    while (!visitados.contains(destino)) {
-      visitados.add(actual);
-      //  ArrayList<Arista> vecinos = actual.getAristas();
-
-
-      for (Arista arista : actual.getAristas()) {
-        if (!visitados.contains(getNodoPorId(arista.getDestino()))) {//el si el nodo actual no esta visitado
-          float distanciaTentativa = distancias.get(actual.getID()) + arista.distancia;
-          if (distanciaTentativa < distancias.get(arista.nodoDestinoId)) { //compara el comino con el infinito anteriormente guardado primera vez , depsues ya con la que haya
-            distancias.put(arista.nodoDestinoId, int (distanciaTentativa));
-            padres.put(getNodoPorId(arista.getDestino()), actual);// guarda nodo como destino como key, guarda el nodo actual
-          }
-        }
-      }
-
-      Nodo nodoMinDistancia = null;
-      int minDistancia = Integer.MAX_VALUE;
-
-      for (Nodo nodo : grafo) {
-        if (!visitados.contains(nodo) && distancias.get(nodo.getID()) < minDistancia) {//si el nodo no fue visitado y la distancia del nodo  es menor al infinito
-          nodoMinDistancia = nodo;//se asigna como el nodo que tiene la menor distancia
-          minDistancia = distancias.get(nodo.getID());// y la minima distancia pasa a ser la del nodo que estoy recorriendo
-        }
-      }
-      if (nodoMinDistancia == null) {
-        break;
-      }
-
-      actual = nodoMinDistancia;
-    }
-
-
-    recorrido = (ArrayList)padres.keySet();
-    return recorrido;
-  }
-
-
-  private  HashMap<Nodo, Integer> obtenerCaminoMasCorto(HashMap<Nodo, Nodo> padres, Nodo inicio, Nodo destino) {
-    HashMap<Nodo, Integer> caminoMasCorto = new HashMap<>();
-    ArrayList<Nodo> recorrido = new ArrayList();
-    Nodo actual = destino;
-    int distanciaTotal = 0;
-
-    while (actual != null) {
-      //  caminoMasCorto.put(actual, distanciaTotal);
-      recorrido.add(actual);
-      if (actual == inicio) {
-        break;
-      }
-      distanciaTotal += obtenerPesoArista(padres.get(actual), actual);
-      actual = padres.get(actual);
-    }
-
-    return caminoMasCorto;
-  }
-
-
-  private  float obtenerPesoArista(Nodo origen, Nodo destino) {
-    for (Arista arista : origen.aristas) {
-      if (arista.nodoDestinoId == destino.getID()) {
-        return arista.distancia;
-      }
-    }
-    return Integer.MAX_VALUE;
-  }
-
-*/
-
 
 public LinkedList<Nodo> dijkstra(Nodo inicio, Nodo destino) {
     HashMap<Integer, Integer> distancias = new HashMap<>();
@@ -192,7 +104,7 @@ public LinkedList<Nodo> dijkstra(Nodo inicio, Nodo destino) {
 
     // Construye el recorrido desde el destino hacia el inicio
     int nodoActualID = destino.getID();
-    while (nodoActualID != inicio.getID()) {
+    while (nodoActualID != inicio.getID() && padres.get(nodoActualID) != null) {
         recorrido.add(nodos.get(nodoActualID));
         nodoActualID = padres.get(nodoActualID);
     }
