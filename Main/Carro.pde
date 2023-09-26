@@ -148,6 +148,15 @@ class Carro extends Thread {
         this.pos.y += radio;
       }
     }
+    if (y < ruta.get(0).pos.y) {
+      if (x > ruta.get(0).pos.x) {
+        this.objetivo.y-=radio;
+        this.pos.y -= radio;
+      } else {
+        this.objetivo.y+=radio;
+        this.pos.y += radio;
+      }
+    }
     this.horaSalida = millis();
     this.direccion = PVector.sub(objetivo, pos);
     this.direccion.normalize();
